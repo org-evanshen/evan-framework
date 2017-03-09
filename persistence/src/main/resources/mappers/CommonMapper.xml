@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="common">
+    <sql id="now" databaseId="mysql">
+		now()
+	</sql>
+    <sql id="now" databaseId="oracle">
+		sysdate
+	</sql>
+
+    <sql id="pageBegin" databaseId="oracle">
+        <if test="startRow > 1">select * from (</if>
+        <if test="endRow > 1">select t1.*,rownum as rn from (</if>
+    </sql>
+    <sql id="pageBegin" databaseId="mysql">
+        <!-- mysql 分页 空头就行了 -->
+    </sql>
+
+    <sql id="pageEnd" databaseId="oracle">
+        <if test="endRow > 1"><![CDATA[) t1 where rownum <=${endRow}]]></if>
+        <if test="startRow > 1">) t2 where rn >= ${startRow}</if>
+    </sql>
+    <sql id="pageEnd" databaseId="mysql">
+        <if test="pageSize > 0">
+            limit ${startRowBegin0},${pageSize}
+        </if>
+    </sql>
+</mapper>

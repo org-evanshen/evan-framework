@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+     http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+
+    <!-- memcache 配置 -->
+    <bean id="memcachePool" class="com.whalin.MemCached.SockIOPool" factory-method="getInstance"
+          init-method="initialize" destroy-method="shutDown">
+        <constructor-arg>
+            <value>ancunMemcachedPool</value>
+        </constructor-arg>
+        <property name="servers">
+            <list>
+                <value>${memcache.server1}</value>
+            </list>
+        </property>
+        <property name="weights">
+            <list>
+                <value>${memcache.weight1}</value>
+            </list>
+        </property>
+        <property name="initConn" value="5"/>
+        <property name="minConn" value="5"/>
+        <property name="maxConn" value="250"/>
+        <property name="maxIdle" value="3600000"/>
+        <property name="maintSleep" value="30"></property>
+        <property name="nagle" value="false"></property>
+        <property name="socketTO" value="3000"></property>
+        <property name="socketConnectTO" value="0"></property>
+    </bean>
+    <bean id="memcachedClient" class="com.whalin.MemCached.MemCachedClient">
+        <constructor-arg>
+            <value>ancunMemcachedPool</value>
+        </constructor-arg>
+    </bean>
+    <bean id="memcacheUtil" class="com.ancun.core.cache.MemcacheUtil">
+        <property name="memCachedClient" ref="memcachedClient"></property>
+    </bean>
+
+    <!-- 阿里云 OCS 配置 <bean id="aliOcsUtil" class="com.ancun.products.core.cache.AliOcsUtil" init-method="init"> </bean> -->
+</beans>

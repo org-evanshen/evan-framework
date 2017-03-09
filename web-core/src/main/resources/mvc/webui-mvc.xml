@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans	
+		http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/mvc 
+		http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+	<import resource="core-mvc.xml" />
+
+	<mvc:annotation-driven conversion-service="conversionService"
+		ignore-default-model-on-redirect="false" validator="validator">
+		<mvc:message-converters register-defaults="true">
+			<ref bean="stringHttpMessageConverter" />
+			<ref bean="mappingJacksonHttpMessageConverter" />
+		</mvc:message-converters>
+		<mvc:argument-resolvers>
+			<!-- 分页参数初始化 ,对有@QueryPage的Query对象进行初始化 -->
+			<bean id="queryPageArgumentResolver" class="com.ancun.core.web.argumentresolver.QueryPageArgumentResolver">
+				<!-- <property name="defaultPageSize" value="20"></property> -->
+			</bean>
+		</mvc:argument-resolvers>
+	</mvc:annotation-driven>
+
+	<!-- 容器默认的DefaultServletHandler处理 所有静态内容与无RequestMapping处理的URL 
+	<mvc:default-servlet-handler  />-->
+	<mvc:resources mapping="/js/**" location="/js/" />
+	<mvc:resources mapping="/scripts/**" location="/scripts/" />
+	<mvc:resources mapping="/css/**" location="/css/" />
+	<!--<mvc:resources mapping="/images/**" location="/images/" />-->
+
+	<!-- 定义无Controller的path<->view直接映射 <mvc:view-controller path="/" view-name="redirect:/task" /> -->
+
+	<!-- velocity 配置 <bean id="velocityViewCache" class="com.ancun.products.core.utils.cache.local.SimpleHashMapCompactCache"></bean> -->
+	<bean id="velocityConfigurer" abstract="true">	
+		<property name="resourceLoaderPath" value="/WEB-INF/views" />
+		<!--<property name="configLocation" value="/WEB-INF/classes/velocity.properties"></property> -->
+		<property name="velocityProperties">
+			<props>
+				<prop key="input.encoding">${file.encoding}</prop>
+				<prop key="output.encoding">${web.encoding}</prop>
+				<prop key="classpath.resource.loader.path">/</prop>
+				<prop key="directive.set.null.allowed">true</prop>
+				<prop key="userdirective">com.ancun.core.web.velocity.directive.CacheDirective
+				</prop>				
+				<prop key="velocimacro.library">
+					macros/macros-common.vm
+					<!--macros/macros-${app.code}.vm -->
+				</prop>
+				<prop key="file.resource.loader.cache">${velocity.resource.loader.cache}</prop>
+				<prop key="classpath.resource.loader.cache">${velocity.resource.loader.cache}</prop>
+				<prop key="velocimacro.library.autoreload">${velocity.velocimacro.library.autoreload}</prop>
+				<prop key="eventhandler.referenceinsertion.class">com.ancun.core.web.velocity.XssHandler</prop>
+				<prop key="reference.insertion.event.handler.direct.variable.names">$direct-output,$screen_content</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="velocityViewResolver" abstract="true">
+		<property name="cache" value="${velocity.resource.loader.cache}" />
+		<property name="order" value="10" />
+		<property name="suffix" value=".vm" />
+		<property name="contentType" value="text/html;charset=${web.encoding}"></property>
+		<!--<property name="templateEncoding" value="${file.encoding}"></property> -->
+		<property name="exposeSpringMacroHelpers" value="true" />
+		<property name="exposeRequestAttributes" value="true" />
+		<!--<property name="exposeSessionAttributes" value="true" /> -->
+		<property name="requestContextAttribute" value="requestContext" />	
+		<!--
+		<property name="layoutUrl" value="commons/layout-simple.vm" />  -->
+		<property name="layoutKey" value="layout" />
+		<property name="screenContentKey" value="screen_content" />
+		<property name="dateToolAttribute" value="dateTool"></property>
+		<property name="numberToolAttribute" value="numberTool"></property>
+		<property name="toolboxConfigLocation" value="/WEB-INF/classes/toolbox.xml" />
+	</bean>
+
+	
+	<!-- mappings -->
+	<!--<bean class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping"/> -->
+	<!-- <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"> 
+		<property name="interceptors"> <list> <ref bean="monitorIntercepter" /> </list> </property> </bean> -->
+
+	<!-- webBindingInitializer <bean id="webBindingInitializer" class="org.springframework.web.bind.support.ConfigurableWebBindingInitializer"> 
+		<property name="conversionService" ref="conversionService" /> <property name="validator" ref="validator" 
+		/> </bean> -->
+
+	<!-- adapters <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter"> 
+		<property name="customArgumentResolvers"> <list> <ref bean="queryPageArgumentResolve"/> </list> </property> 
+		<property name="messageConverters"> <list> <ref bean="stringHttpMessageConverter" /> <ref bean="mappingJacksonHttpMessageConverter" 
+		/> </list> </property> <property name="webBindingInitializer" ref="webBindingInitializer"></property> 
+		</bean> -->
+</beans>

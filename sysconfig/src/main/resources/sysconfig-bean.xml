@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+     http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+	<!-- propertyConfigurer -->
+	<!--<bean id="propertyConfigurer" class="org.springframework.beans.factory.sysconfig.PropertyPlaceholderConfigurer"> -->
+	<bean id="propertyConfigurer" class="com.ancun.core.sysconfig.impl.EncryptablePropertyPlaceholderConfigurer">
+		<constructor-arg ref="configurationEncryptor" />
+		<property name="ignoreResourceNotFound" value="true"></property>
+		<property name="ignoreUnresolvablePlaceholders" value="true"></property>
+		<property name="locations">
+			<list>
+				<value>classpath*:config-*.properties</value>
+				<!--springboot加载配置文件-->
+				<value>classpath*:BOOT-INF/classes/config-*.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="sysConfig" class="com.ancun.core.sysconfig.impl.SysConfigImpl" init-method="init">
+		<property name="propertyConfigurer" ref="propertyConfigurer" />
+	</bean>
+
+	<!-- -->
+	<!-- Configuration for encryptor, based on environment variables. -->
+	<!-- -->
+	<!-- In this example, the encryption password will be read from an -->
+	<!-- environment variable called "APP_ENCRYPTION_PASSWORD" which, once -->
+	<!-- the application has been started, could be safely unset. -->
+	<!-- -->
+	<bean id="environmentVariablesConfiguration" class="org.jasypt.encryption.pbe.config.EnvironmentStringPBEConfig">
+		<property name="algorithm" value="PBEWithMD5AndDES" />
+		<property name="passwordEnvName" value="APP_ENCRYPTION_PASSWORD" />
+	</bean>
+
+	<!-- -->
+	<!-- The will be the encryptor used for decrypting configuration values. -->
+	<!-- -->
+	<bean id="configurationEncryptor" class="org.jasypt.encryption.pbe.StandardPBEStringEncryptor">
+		<property name="config" ref="environmentVariablesConfiguration" />
+	</bean>
+
+</beans>

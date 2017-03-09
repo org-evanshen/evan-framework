@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+    <appender name="console" class="org.apache.log4j.ConsoleAppender">
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss} %p %m [%t] [%l] %n"/>
+        </layout>
+    </appender>
+
+    <!--所有日志-->
+    <appender name="main" class="com.ancun.core.client.log4j.TimedBufferedRollingFileAppender">
+        <param name="File" value="/Users/evan/sources/workspace01/logs/ancun/service-core/main.log"/>
+        <param name="MaxFileSize" value="5MB"/>
+        <param name="MaxBackupIndex" value="100"/>
+        <param name="BufferSize" value="1024"/>
+        <param name="flushInterval" value="5"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss} %p %m [%t] [%l] %n"/>
+        </layout>
+    </appender>
+
+    <!--接口日志-->
+    <appender name="webapi" class="com.ancun.core.client.log4j.TimedBufferedRollingFileAppender">
+        <param name="File" value="/Users/evan/sources/workspace01/logs/ancun/service-core/webapi.log"/>
+        <param name="MaxFileSize" value="1KB"/>
+        <param name="MaxBackupIndex" value="100"/>
+        <param name="BufferSize" value="1024"/>
+        <param name="flushInterval" value="5"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%m%n"/>
+        </layout>
+    </appender>
+
+    <!--错误日志-->
+    <appender name="error" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="File" value="/Users/evan/sources/workspace01/logs/ancun/service-core/error.log"/>
+        <param name="Threshold" value="ERROR"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                   value="------------------------------------------------------------------------------%n%d{yyyy-MM-dd HH:mm:ss} %m [%t] [%l] %n"/>
+        </layout>
+    </appender>
+
+    <!--异常日志邮件通知-->
+    <appender name="email" class="org.apache.log4j.net.SMTPAppender">
+        <param name="Threshold" value="ERROR"/>
+        <param name="From" value="jcpt@ancunkeji.com"/>
+        <param name="SMTPHost" value="smtp.ancunkeji.com"/>
+        <param name="SMTPUsername" value="jcpt@ancunkeji.com"/>
+        <param name="SMTPPassword" value="jcpt@2016"/>
+        <param name="Subject" value="Error message from ancun bps"/>
+        <param name="To" value="shenwei@ancun.com"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss} %m [%t] [%l] %n"/>
+        </layout>
+    </appender>
+    <appender name="async" class="org.apache.log4j.AsyncAppender">
+        <param name="blocking" value="false"/>
+        <param name="bufferSize" value="32"/>
+        <appender-ref ref="email"/>
+    </appender>
+
+    <logger name="com.ancun.products.core.web.velocity.resolver.FixedVelocityLayoutView">
+        <level value="WARN"/>
+    </logger>
+    <logger name="com.alibaba.dubbo.registry">
+        <level value="WARN"/>
+    </logger>
+    <logger name="com.alibaba.dubbo.config">
+        <level value="WARN"/>
+    </logger>
+    <logger name="com.ancun.products.core.log4j.Webapi">
+        <level value="INFO"/>
+        <appender-ref ref="webapi"/>
+    </logger>
+
+    <root>
+        <priority value="INFO"/>
+        <appender-ref ref="console"/>
+        <appender-ref ref="main"/>
+        <appender-ref ref="error"/>
+        <!--
+        <appender-ref ref="async"/>
+        -->
+    </root>
+
+</log4j:configuration>

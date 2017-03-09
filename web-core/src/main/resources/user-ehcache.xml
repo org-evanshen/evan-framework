@@ -1,0 +1,7 @@
+<ehcache>
+	<cache name="UserAgentCache" 
+		maxElementsInMemory="2048" 
+		timeToIdleSeconds="10"
+		timeToLiveSeconds="10">
+	</cache>
+</ehcache>
