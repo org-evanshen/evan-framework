@@ -1,169 +1,148 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0                        http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.ancun</groupId>
-	<artifactId>ancun-core</artifactId>
-	<packaging>pom</packaging>
-	<version>1.1.4</version>
+    <groupId>org.evanframework</groupId>
+    <artifactId>evan-framework</artifactId>
+    <packaging>pom</packaging>
+    <version>2.0-SNAPSHOT</version>
 
-
-	<modules>
-		<module>client-core</module>
-		<module>sysconfig</module>
-		<module>cache</module>
-		<module>store</module>
-		<module>mq</module>
-		<module>mail</module>
-		<module>sms</module>
-		<module>httpclient</module>
-		<module>persistence</module>
-		<module>datadict</module>
-		<module>syslog</module>
-		<module>spring</module>
-		<module>sysparameter</module>
-		<module>utils</module>
-		<module>web-core</module>
-        <module>easy-activemq</module>
+    <modules>
+        <module>domain</module>
+        <module>sysconfig</module>
+        <module>cache</module>
+        <module>datadict</module>
+        <module>store</module>
+        <module>mq</module>
+        <module>mail</module>
+        <module>httpclient</module>
+        <module>syslog</module>
+        <module>persistence</module>
+        <module>utils</module>
+        <module>web</module>
     </modules>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<jdk.version>1.7</jdk.version>
-		<junit.version>4.11</junit.version>
-		<spring.version>4.1.9.RELEASE</spring.version>
-		<slf4j.version>1.7.21</slf4j.version>
-		<log4j.version>1.2.17</log4j.version>
-		<commons-lang.version>3.4</commons-lang.version>
-		<commons-beanutils.version>1.9.3</commons-beanutils.version>
-		<easymock.version>3.4</easymock.version>
-		<mybatis.version>3.4.1</mybatis.version>
-		<mybatis-spring.version>1.3.0</mybatis-spring.version>
-		<ojdbc14.version>10.2.0.4.0</ojdbc14.version>
-		<mysql-connector-java.version>5.1.39</mysql-connector-java.version>
-		<fastjson.version>1.2.17</fastjson.version>
-		<commons-codec.version>1.10</commons-codec.version>
-		<commons-pool.version>1.6</commons-pool.version>
-		<commons-io.version>2.5</commons-io.version>
-	</properties>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <jdk.version>1.7</jdk.version>
+        <file_encoding>UTF-8</file_encoding>
+        <commons-codec.version>1.10</commons-codec.version>
+        <commons-pool.version>1.6</commons-pool.version>
+        <commons-io.version>2.5</commons-io.version>
+        <commons-lang.version>3.5</commons-lang.version>
+        <commons-beanutils.version>1.9.3</commons-beanutils.version>
+        <spring.version>4.3.8.RELEASE</spring.version>
+        <slf4j.version>1.7.25</slf4j.version>
+        <logback.version>1.2.2</logback.version>
+        <junit.version>4.12</junit.version>
+        <springboot.version>1.5.4.RELEASE</springboot.version>
+        <mybatis.version>3.4.4</mybatis.version>
+        <pagehelper.version>4.1.6</pagehelper.version>
+        <mysql.version>5.1.41</mysql.version>
+        <druid.version>1.0.28</druid.version>
+        <sessionRedis.version>1.2.2.RELEASE</sessionRedis.version>
+        <fastjson.version>1.2.17</fastjson.version>
+        <mybatis-spring.version>1.3.1</mybatis-spring.version>
+    </properties>
 
-	<build>
-		<plugins>
-			<!-- compiler -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.5.1</version>
-				<configuration>
-					<source>${jdk.version}</source>
-					<target>${jdk.version}</target>
-					<encoding>${project.build.sourceEncoding}</encoding>
-				</configuration>
-			</plugin>
+    <build>
+        <plugins>
+            <!-- compiler -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.5.1</version>
+                <configuration>
+                    <source>${jdk.version}</source>
+                    <target>${jdk.version}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
 
-			<!-- dependency -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<version>2.8</version>
-				<executions>
-					<execution>
-						<id>copy-dependencies</id>
-						<phase>package</phase>
-						<goals>
-							<goal>copy-dependencies</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${project.build.directory}/lib</outputDirectory>
-							<overWriteReleases>false</overWriteReleases>
-							<overWriteSnapshots>false</overWriteSnapshots>
-							<overWriteIfNewer>true</overWriteIfNewer>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
+            <!-- dependency -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.8</version>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                            <overWriteReleases>false</overWriteReleases>
+                            <overWriteSnapshots>false</overWriteSnapshots>
+                            <overWriteIfNewer>true</overWriteIfNewer>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 
-			<!-- source -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-				<version>3.0.0</version>
-				<configuration>
-					<attach>true</attach>
-				</configuration>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<phase>deploy</phase>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+            <!-- source -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <attach>true</attach>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <!--<phase>deploy</phase>-->
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 
-			<!-- javadoc
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.10.3</version>
-				<configuration>
-					<encoding>${project.build.sourceEncoding}</encoding>
-					<aggregate>true</aggregate>
-				</configuration>
-				<executions>
-					<execution>
-						<id>attach-javadocs</id>
-						<phase>deploy</phase>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>-->
+            <!--deploy-->
+            <plugin>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.8.2</version>
+                <executions>
+                    <execution>
+                        <id>deploy</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>deploy</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
-			<!--deploy-->
-			<plugin>
-				<artifactId>maven-deploy-plugin</artifactId>
-				<version>2.8.2</version>
-				<executions>
-					<execution>
-						<id>deploy</id>
-						<phase>deploy</phase>
-						<goals>
-							<goal>deploy</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
-
-	<repositories>
-		<!--nexus Repository -->
-		<repository>
-			<id>nexus-releases</id>
-			<name>nexus Repository</name>
-			<url>http://121.43.114.178:9002/nexus/content/groups/public/</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
-	<distributionManagement>
-		<repository>
-			<id>nexus-releases</id>
-			<name>Internal Releases</name>
-			<url>http://121.43.114.178:9002/nexus/content/repositories/releases</url>
-		</repository>
-		<snapshotRepository>
-			<id>nexus-snapshots</id>
-			<name>Internal Snapshots</name>
-			<url>http://121.43.114.178:9002/nexus/content/repositories/snapshots</url>
-		</snapshotRepository>
-	</distributionManagement>
+    <!-- -->
+    <repositories>
+        <repository>
+            <id>nexus-releases</id>
+            <name>nexus Repository</name>
+            <url>http://192.168.0.197:8082/nexus/content/groups/public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+    <distributionManagement>
+        <repository>
+            <id>nexus-releases</id>
+            <name>Internal Releases</name>
+            <url>http://192.168.0.197:8082/nexus/content/repositories/releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <name>Internal Snapshots</name>
+            <url>http://192.168.0.197:8082/nexus/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
 </project>

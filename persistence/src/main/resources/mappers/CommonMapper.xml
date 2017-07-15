@@ -24,7 +24,7 @@
     </sql>
     <sql id="pageEnd" databaseId="mysql">
         <if test="pageSize > 0">
-            limit ${startRowBegin0},${pageSize}
+            limit ${startRow},${pageSize}
         </if>
     </sql>
 </mapper>

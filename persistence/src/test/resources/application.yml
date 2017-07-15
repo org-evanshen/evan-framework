@@ -1,0 +1,23 @@
+#app.profile
+profile:
+    DEVELOP
+spring:
+  application:
+    name: evan-persistence
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://192.168.0.199:3306/evan_demo?useUnicode=true&characterEncoding=UTF8&zeroDateTimeBehavior=convertToNull&autoReconnect=true
+    username: root
+    password: xrw0199
+  redis:
+    #sentinel: master: mymaster
+    #sentinel: nodes: 192.168.0.183:26379,192.168.0.184:26379,192.168.0.185:26379
+    host: localhost
+    password: xrw0197
+    port: 6379
+
+logging:
+  pattern:
+    console: "%date{yy-MM-dd HH:mm:ss} [%level] <%msg> [%thread] %caller{1}"
+  #level:
