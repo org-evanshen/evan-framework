@@ -35,7 +35,7 @@ public class SysConfigImpl implements SysConfig {
             throw new IllegalStateException("Environment is not inited, please call method [setEnvironment]");
         }
 
-        String profile = environment.getProperty(KEY_PROFILE);
+         String profile = environment.getProperty(KEY_PROFILE);
         if (StringUtils.isBlank(profile)) {
             profile = environment.getProperty("app." + KEY_PROFILE);
         }
@@ -51,7 +51,7 @@ public class SysConfigImpl implements SysConfig {
 //			writeToOss = Boolean.valueOf(tmp);
 //		}
         appCode = environment.getProperty(KEY_APP_CODE1);
-        if (StringUtils.isBlank(profile)) {
+        if (StringUtils.isBlank(appCode)) {
             appCode = environment.getProperty(KEY_APP_CODE2);
         }
 
