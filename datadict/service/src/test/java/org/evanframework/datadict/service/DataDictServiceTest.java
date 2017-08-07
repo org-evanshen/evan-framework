@@ -1,7 +1,7 @@
 package org.evanframework.datadict.service;
 
 
-import org.evanframework.datadict.service.dto.DataDictionary;
+import org.evanframework.datadict.dto.DataDictionary;
 import org.evanframework.datadict.service.support.SpringBeansConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;

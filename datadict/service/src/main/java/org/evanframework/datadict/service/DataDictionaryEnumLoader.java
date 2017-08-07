@@ -1,8 +1,8 @@
 package org.evanframework.datadict.service;
 
-import org.evanframework.datadict.service.dto.DataDictionary;
-import org.evanframework.datadict.service.dto.DataDictionaryEnum;
-import org.evanframework.datadict.service.dto.DataDictionaryList;
+import org.evanframework.datadict.dto.DataDictionaryEnum;
+import org.evanframework.datadict.dto.DataDictionaryList;
+import org.evanframework.datadict.dto.DataDictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;

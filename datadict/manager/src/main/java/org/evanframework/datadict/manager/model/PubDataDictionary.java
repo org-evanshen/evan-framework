@@ -1,6 +1,6 @@
 package org.evanframework.datadict.manager.model;
 
-import org.evanframework.datadict.service.dto.DataDictionary;
+import org.evanframework.datadict.dto.DataDictionary;
 
 import java.io.Serializable;
 import java.util.Date;

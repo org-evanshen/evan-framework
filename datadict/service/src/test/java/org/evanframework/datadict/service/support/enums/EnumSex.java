@@ -1,7 +1,7 @@
 package org.evanframework.datadict.service.support.enums;
 
-import org.evanframework.datadict.service.dto.DataDictionary;
-import org.evanframework.datadict.service.dto.DataDictionaryEnum;
+import org.evanframework.datadict.dto.DataDictionary;
+import org.evanframework.datadict.dto.DataDictionaryEnum;
 
 import java.util.HashMap;
 import java.util.Map;

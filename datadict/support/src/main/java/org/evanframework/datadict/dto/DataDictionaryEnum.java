@@ -1,4 +1,4 @@
-package org.evanframework.datadict.service.dto;
+package org.evanframework.datadict.dto;
 
 
 /**

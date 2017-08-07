@@ -1,8 +1,8 @@
-package org.evanframework.datadict.service.cache;
+package org.evanframework.datadict.cache;
 
 import org.evanframework.cache.AbstractCache;
 import org.evanframework.cache.RedisTemplateCreator;
-import org.evanframework.datadict.service.dto.DataDictionaryList;
+import org.evanframework.datadict.dto.DataDictionaryList;
 import net.sf.ehcache.CacheManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

@@ -1,6 +1,6 @@
 package org.evanframework.datadict.service;
 
-import org.evanframework.datadict.service.dto.DataDictionaryEnum;
+import org.evanframework.datadict.dto.DataDictionaryEnum;
 
 import java.util.Map;
 

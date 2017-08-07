@@ -1,7 +1,7 @@
-package org.evanframework.datadict.service;
+package org.evanframework.datadict;
 
-import org.evanframework.datadict.service.dto.DataDictionary;
-import org.evanframework.datadict.service.dto.DataDictionaryList;
+import org.evanframework.datadict.dto.DataDictionaryList;
+import org.evanframework.datadict.dto.DataDictionary;
 
 import java.util.Map;
 

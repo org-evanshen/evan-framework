@@ -1,7 +1,7 @@
 package org.evanframework.datadict.manager;
 
 import org.evanframework.datadict.manager.model.PubDataDictionaryQuery;
-import org.evanframework.datadict.service.dto.DataDictionaryList;
+import org.evanframework.datadict.dto.DataDictionaryList;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

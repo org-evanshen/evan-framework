@@ -1,14 +1,14 @@
 package org.evanframework.datadict.manager;
 
-import org.evanframework.datadict.service.DatadictionaryProxy;
-import org.evanframework.datadict.service.cache.DataDictionaryCacheForData;
-import org.evanframework.datadict.service.cache.DataDictionaryCacheForName;
+import org.evanframework.datadict.DatadictionaryProxy;
+import org.evanframework.datadict.cache.DataDictionaryCacheForData;
+import org.evanframework.datadict.cache.DataDictionaryCacheForName;
 import org.evanframework.datadict.manager.mapper.PubDataDictionaryMapper;
 import org.evanframework.datadict.manager.model.PubDataDictionary;
 import org.evanframework.datadict.manager.model.PubDataDictionaryColumns;
 import org.evanframework.datadict.manager.model.PubDataDictionaryQuery;
-import org.evanframework.datadict.service.dto.DataDictionary;
-import org.evanframework.datadict.service.dto.DataDictionaryList;
+import org.evanframework.datadict.dto.DataDictionary;
+import org.evanframework.datadict.dto.DataDictionaryList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
