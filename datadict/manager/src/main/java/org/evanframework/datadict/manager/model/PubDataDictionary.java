@@ -62,11 +62,6 @@ public class PubDataDictionary implements Serializable {
         return dto;
     }
 
-    public String toString() {
-        return "PubDataDictionary [dictText=" + dictText + ", dictValue=" + dictValue + ", dictGroup=" + dictGroup
-                + "]";
-    }
-
     /**
      * 数据字典的显示文本
      */
@@ -259,4 +254,26 @@ public class PubDataDictionary implements Serializable {
         this.extend2 = extend2;
     }
 
+
+    @Override
+    public String toString() {
+        return "PubDataDictionary{" +
+                "dictText='" + dictText + '\'' +
+                ", dictValue='" + dictValue + '\'' +
+                ", dictGroup='" + dictGroup + '\'' +
+                ", sortNum=" + sortNum +
+                ", gmtCreate=" + gmtCreate +
+                ", parentValue='" + parentValue + '\'' +
+                ", textColor='" + textColor + '\'' +
+                ", gmtModify=" + gmtModify +
+                ", status=" + status +
+                ", subSystem='" + subSystem + '\'' +
+                ", parentDataDictionary=" + parentDataDictionary +
+                ", disabled=" + disabled +
+                ", extend1='" + extend1 + '\'' +
+                ", extend3='" + extend3 + '\'' +
+                ", extend2='" + extend2 + '\'' +
+                ", leaf=" + leaf +
+                '}';
+    }
 }

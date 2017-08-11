@@ -6,6 +6,7 @@ import org.evanframework.query.QueryParam;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Date;
 
 
@@ -235,5 +236,28 @@ public class PubDataDictionaryQuery extends AbstractQueryParam implements QueryP
 
     public void setExtend3(String extend3) {
         this.extend3 = extend3;
+    }
+
+    @Override
+    public String toString() {
+        return "PubDataDictionaryQuery{" +
+                "dictText='" + dictText + '\'' +
+                ", dictValue='" + dictValue + '\'' +
+                ", dictGroup='" + dictGroup + '\'' +
+                ", sortNumFrom=" + sortNumFrom +
+                ", sortNumTo=" + sortNumTo +
+                ", gmtCreateFrom=" + gmtCreateFrom +
+                ", gmtCreateTo=" + gmtCreateTo +
+                ", parentValue='" + parentValue + '\'' +
+                ", textColor='" + textColor + '\'' +
+                ", gmtModifyFrom=" + gmtModifyFrom +
+                ", gmtModifyTo=" + gmtModifyTo +
+                ", status='" + status + '\'' +
+                ", statusArray=" + Arrays.toString(statusArray) +
+                ", subSystem='" + subSystem + '\'' +
+                ", extend1='" + extend1 + '\'' +
+                ", extend2='" + extend2 + '\'' +
+                ", extend3='" + extend3 + '\'' +
+                "} " + super.toString();
     }
 }
