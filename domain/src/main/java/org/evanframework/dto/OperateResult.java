@@ -113,6 +113,7 @@ public class OperateResult<T> implements Serializable {
         return "OperateResult{" +
                 "code='" + code + '\'' +
                 ", msg='" + msg + '\'' +
+                ", serversion='" + serversion + '\'' +
                 ", data=" + data +
                 '}';
     }

@@ -138,6 +138,15 @@ public class ApiResponse extends OperateResult implements Serializable {
 //        this.data = data;
 //    }
 
+
+    @Override
+    public String toString() {
+        return "ApiResponse{" +
+                "page=" + page +
+                ", list=" + list +
+                "} " + super.toString();
+    }
+
     public class Page {
         private Integer pageSize;
         private Integer pageNo;
