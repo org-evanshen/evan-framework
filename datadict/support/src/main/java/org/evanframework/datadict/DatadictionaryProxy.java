@@ -1,7 +1,7 @@
 package org.evanframework.datadict;
 
-import org.evanframework.datadict.dto.DataDictionaryList;
 import org.evanframework.datadict.dto.DataDictionary;
+import org.evanframework.datadict.dto.DataDictionaryList;
 
 import java.util.Map;
 
@@ -10,12 +10,19 @@ import java.util.Map;
  */
 public interface DatadictionaryProxy {
     /**
-     * 根据分组取该父节点的字节点
+     * 根据分组获取字典
      */
-    DataDictionaryList getByGroup(String group, boolean isIncludeDeleted);
+    DataDictionaryList getForList(String group, boolean isIncludeDeleted);
 
-    DataDictionaryList getByGroupAndParentValue(String group, String parentValue,
-                                                boolean isIncludeDeleted);
+    /**
+     * 根据分组和上级字典取子数据
+     * @param group
+     * @param parentValue
+     * @param isIncludeDeleted
+     * @return
+     */
+    DataDictionaryList getForList(String group, String parentValue,
+                                  boolean isIncludeDeleted);
 
     /**
      * 根据分组获取该分组下的数据字典，以Map<group, PubDataDictionary>方式返回
@@ -23,5 +30,5 @@ public interface DatadictionaryProxy {
      * @param group
      * @return
      */
-    public Map<String, DataDictionary> getByGroupForMap(String group);
+    Map<String, DataDictionary> getForMap(String group);
 }

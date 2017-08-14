@@ -3,12 +3,12 @@ package org.evanframework.datadict.manager;
 import org.evanframework.datadict.DatadictionaryProxy;
 import org.evanframework.datadict.cache.DataDictionaryCacheForData;
 import org.evanframework.datadict.cache.DataDictionaryCacheForName;
+import org.evanframework.datadict.dto.DataDictionary;
+import org.evanframework.datadict.dto.DataDictionaryList;
 import org.evanframework.datadict.manager.mapper.PubDataDictionaryMapper;
 import org.evanframework.datadict.manager.model.PubDataDictionary;
 import org.evanframework.datadict.manager.model.PubDataDictionaryColumns;
 import org.evanframework.datadict.manager.model.PubDataDictionaryQuery;
-import org.evanframework.datadict.dto.DataDictionary;
-import org.evanframework.datadict.dto.DataDictionaryList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -24,6 +24,7 @@ import java.util.Map;
 /**
  * 数据字典管理类<p>
  * 实现interface DatadictionaryProxy，给其他模块提供服务
+ *
  * @author shen.wei
  */
 @Repository
@@ -39,12 +40,11 @@ public class PubDataDictionaryManager implements DatadictionaryProxy {
     @Autowired
     private DataDictionaryCacheForName dataDictionaryCacheForName;
 
-    public DataDictionaryList getByGroup(String group, boolean isIncludeDeleted) {
-        return getByGroupAndParentValue(group, null, isIncludeDeleted);
+    public DataDictionaryList getForList(String group, boolean isIncludeDeleted) {
+        return getForList(group, null, isIncludeDeleted);
     }
 
-    public DataDictionaryList getByGroupAndParentValue(String group, String parentValue,
-                                                       boolean isIncludeDeleted) {
+    public DataDictionaryList getForList(String group, String parentValue, boolean isIncludeDeleted) {
         PubDataDictionaryQuery query = new PubDataDictionaryQuery();
         query.setDictGroup(group);
         query.setParentValue(parentValue);
@@ -58,7 +58,7 @@ public class PubDataDictionaryManager implements DatadictionaryProxy {
         return ddl;
     }
 
-    public Map<String, DataDictionary> getByGroupForMap(String group) {
+    public Map<String, DataDictionary> getForMap(String group) {
         PubDataDictionaryQuery query = new PubDataDictionaryQuery();
         query.setDictGroup(group);
         List<PubDataDictionary> list = pubDataDictionaryMapper.queryList(query);
@@ -95,6 +95,7 @@ public class PubDataDictionaryManager implements DatadictionaryProxy {
 
     /**
      * 判断字典排序号是否存在
+     *
      * @param sortNum
      * @param group
      * @param parentValue
@@ -114,6 +115,7 @@ public class PubDataDictionaryManager implements DatadictionaryProxy {
     /**
      * 增加排序号 从排序号大于startSortNum(含)的字典的排序增加1<p>
      * update pub_data_dictionary a set a.sort_num=a.sort_num+1 where a.dict_group=? and a.parent_value=? and a.sort_num>=?
+     *
      * @param startSortNum
      * @param group
      * @param parentValue
@@ -127,6 +129,7 @@ public class PubDataDictionaryManager implements DatadictionaryProxy {
      * 增加排序号，将排序号从startSortNum(含)到endSortNum(含)的字典的的排序号增加1
      * <p>
      * update pub_data_dictionary a set a.sort_num=a.sort_num+1 where a.dict_group=? and a.parent_value=? and a.sort_num>=? and a.sort_num<?
+     *
      * @param startSortNum
      * @param endSortNum
      * @param group
@@ -141,6 +144,7 @@ public class PubDataDictionaryManager implements DatadictionaryProxy {
      * 减少排序号，将排序号从startSortNum(含)到endSortNum(含)的字典的的排序号减1，startSortNum、endSortNum从大到小
      * <p>
      * update pub_data_dictionary a set a.sort_num=a.sort_num-1 where a.dict_group=? and a.parent_value=? and a.sort_num<=? and a.sort_num>?
+     *
      * @param startSortNum
      * @param endSortNum
      * @param group

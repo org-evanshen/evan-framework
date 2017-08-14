@@ -41,7 +41,7 @@ public class DataDictionaryService {
      * author: <a href="mailto:277469513@qq.com">Evan.Shen</a><br>
      * version: 2011-2-26 下午10:58:04 <br>
      */
-    public DataDictionaryList getByGroup(String group) {
+    public DataDictionaryList getForList(String group) {
         if (StringUtils.isBlank(group)) {
             return null;
         }
@@ -67,7 +67,7 @@ public class DataDictionaryService {
 
         if (datadictionaryProxy != null) {
             // 从数据字典服务中取
-            dds = datadictionaryProxy.getByGroup(group, false);
+            dds = datadictionaryProxy.getForList(group, false);
             if (dds != null && !dds.isEmpty()) {
                 if (log.isTraceEnabled()) {
                     log.trace(
@@ -87,7 +87,7 @@ public class DataDictionaryService {
      * version: 2011-2-26 下午10:58:04 <br>
      */
 
-    public DataDictionaryList getByGroupAndParentValue(String group, String parentValue) {
+    public DataDictionaryList getForList(String group, String parentValue) {
         if (StringUtils.isBlank(group) || StringUtils.isBlank(parentValue)) {
             return null;
         }
@@ -103,7 +103,7 @@ public class DataDictionaryService {
         if (datadictionaryProxy != null) {
             // 从数据字典服务中取
             if (dds == null) {
-                List<DataDictionary> list = datadictionaryProxy.getByGroupAndParentValue(group, parentValue,
+                List<DataDictionary> list = datadictionaryProxy.getForList(group, parentValue,
                         false);
                 if (!list.isEmpty()) {
                     dds = new DataDictionaryList(list);
@@ -124,7 +124,7 @@ public class DataDictionaryService {
      * @param group
      * @param value
      */
-    public DataDictionary getByValue(String group, String value) {
+    public DataDictionary getForObject(String group, String value) {
         if (StringUtils.isBlank(group) || StringUtils.isBlank(value)) {
             return null;
         }
@@ -149,7 +149,7 @@ public class DataDictionaryService {
         }
 
         if (datadictionaryProxy != null) {
-            Map<String, DataDictionary> map = datadictionaryProxy.getByGroupForMap(group);
+            Map<String, DataDictionary> map = datadictionaryProxy.getForMap(group);
             if (!map.isEmpty()) {
                 if (log.isTraceEnabled()) {
                     log.trace("find data dictionary the key is :[" + group + "],value is: [" + value + "] in database");
@@ -172,7 +172,7 @@ public class DataDictionaryService {
      * @param localCache
      * @return
      */
-    public DataDictionary getByValue(String group, String value, Map<String, DataDictionary> localCache) {
+    public DataDictionary getForObject(String group, String value, Map<String, DataDictionary> localCache) {
         if (StringUtils.isBlank(group) || StringUtils.isBlank(value)) {
             return null;
         }
@@ -184,7 +184,7 @@ public class DataDictionaryService {
         }
 
         if (dd == null) {
-            dd = getByValue(group, value);
+            dd = getForObject(group, value);
             if (localCache != null && dd != null) {
                 localCache.put(group + DATA_GROUP_AND_VALUE_SPLIT + value, dd);
             }
@@ -199,7 +199,7 @@ public class DataDictionaryService {
      * @param localCache
      * @return
      */
-    public String getTextByValue(String group, String value, Map<String, String> localCache) {
+    public String getForString(String group, String value, Map<String, String> localCache) {
         if (StringUtils.isBlank(group) || StringUtils.isBlank(value)) {
             return null;
         }
@@ -208,7 +208,7 @@ public class DataDictionaryService {
             returnV = localCache.get(group + DATA_GROUP_AND_VALUE_SPLIT + value);
         }
         if (StringUtils.isBlank(returnV)) {
-            DataDictionary dd = getByValue(group, value);
+            DataDictionary dd = getForObject(group, value);
             if (dd != null) {
                 returnV = dd.getText();
                 if (localCache != null) {

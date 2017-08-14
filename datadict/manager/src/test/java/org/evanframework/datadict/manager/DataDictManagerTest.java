@@ -22,7 +22,7 @@ public class DataDictManagerTest {
     public void testGetByGroup() {
         PubDataDictionaryQuery query = new PubDataDictionaryQuery();
         query.setDictGroup("cardType");
-        DataDictionaryList list  = pubDataDictionaryManager.getByGroup("cardType",false);
+        DataDictionaryList list  = pubDataDictionaryManager.getForList("cardType",false);
 
         System.out.println("==============" + list);
     }

@@ -2,69 +2,69 @@ package org.evanframework.dto;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Restful接口输出格式封装
+ *
  * @author shenwei
  * @version 17/3/11 下午11:57
  * @since 1.0
  */
-public class ApiResponse extends OperateResult implements Serializable {
+public class ApiResponse<T> extends OperateResult<T> implements Serializable {
     private static final long serialVersionUID = 2941991011401190488L;
 
     private Page page;
-    private List<?> list;
+    //private List<T> list;
 
     public ApiResponse() {
         super();
-    } 
+    }
 
-    private ApiResponse(String code, String msg, Object data) {
+    private ApiResponse(String code, String msg, T data) {
         super(code, msg, data);
     }
 
-    public static ApiResponse create() {
+    public static <T> ApiResponse<T> create() {
         return new ApiResponse();
     }
 
-    public static ApiResponse create(String code, String msg, Serializable data) {
+    public static <T> ApiResponse<T> create(String code, String msg, Serializable data) {
         return new ApiResponse(code, msg, data);
     }
 
-    public static ApiResponse create(String code, String msg) {
+    public static <T> ApiResponse<T> create(String code, String msg) {
         return new ApiResponse(code, msg, null);
     }
 
-    public static ApiResponse create(Object data) {
+    public static <T> ApiResponse<T> create(T data) {
         return new ApiResponse(null, null, data);
     }
 
-    public static ApiResponse create(PageResult<?> pageResult) {
-        ApiResponse response = new ApiResponse();
+    public static <T> ApiResponse<T> create(PageResult pageResult) {
+        ApiResponse<T> response = new ApiResponse();
         response.setPageResult(pageResult);
 
         if (pageResult == null || pageResult.getData() == null) {
-            response.setList(new ArrayList<Object>());
+            response.setData((T) new ArrayList());
         } else {
-            response.setList(pageResult.getData());
+            response.setData((T) pageResult.getData());
         }
 
         return response;
     }
 
-    public static ApiResponse create(List<?> list) {
-        ApiResponse response = new ApiResponse();
-        if (list == null) {
-            response.setList(new ArrayList<Object>());
-        } else {
-            response.setList(list);
-        }
+//    public static <T> ApiResponse<T> create(List<T> list) {
+//        ApiResponse response = new ApiResponse();
+//        if (list == null) {
+//            response.setList(new ArrayList<T>());
+//        } else {
+//            response.setList(list);
+//        }
+//
+//        return response;
+//    }
 
-        return response;
-    }
-
-    public static ApiResponse create(OperateResult operateResult) {
+    public static <T> ApiResponse<T> create(OperateResult<T> operateResult) {
         ApiResponse response = new ApiResponse();
 
         response.setCode(operateResult.getCode());
@@ -74,13 +74,13 @@ public class ApiResponse extends OperateResult implements Serializable {
         return response;
     }
 
-    public List<?> getList() {
-        return list;
-    }
-
-    public void setList(List<?> list) {
-        this.list = list;
-    }
+//    public List<T> getList() {
+//        return list;
+//    }
+//
+//    public void setList(List<T> list) {
+//        this.list = list;
+//    }
 
     public Page getPage() {
         return page;
@@ -90,19 +90,7 @@ public class ApiResponse extends OperateResult implements Serializable {
         this.page = page;
     }
 
-//    public void setData(Object data) {
-//        this.data = data;
-//    }
-//
-//    public String getServersion() {
-//        return serversion;
-//    }
-//
-//    public void setServersion(String serversion) {
-//        this.serversion = serversion;
-//    }
-
-    public void setPageResult(PageResult<?> pageResult) {
+    public void setPageResult(PageResult pageResult) {
         if (page == null) {
             page = new Page();
         }
@@ -111,39 +99,13 @@ public class ApiResponse extends OperateResult implements Serializable {
         page.setPageSize(pageResult.getPageSize());
         page.setRecordCount(pageResult.getRecordCount());
         this.setPage(page);
-        this.setList(pageResult.getData());
+        this.setData((T) pageResult.getData());
     }
-
-    //    public EnumOperateResult getResult() {
-//        return result;
-//    }
-//
-//    public void setRsult(String code) {
-//        this.result = result;
-//    }
-//
-//    public String getMsg() {
-//        return msg;
-//    }
-//
-//    public void setMsg(String msg) {
-//        this.msg = msg;
-//    }
-
-//    public Object getData() {
-//        return data;
-//    }
-//
-//    public void setData(Serializable data) {
-//        this.data = data;
-//    }
-
 
     @Override
     public String toString() {
         return "ApiResponse{" +
                 "page=" + page +
-                ", list=" + list +
                 "} " + super.toString();
     }
 

@@ -20,13 +20,13 @@ public class DataDictServiceTest {
 
     @Test
     public void testGet() {
-        List<DataDictionary> list = dataDictionaryService.getByGroup("sex");
+        List<DataDictionary> list = dataDictionaryService.getForList("sex");
         printList(list);
 
-        list = dataDictionaryService.getByGroup("cardType");
+        list = dataDictionaryService.getForList("cardType");
         printList(list);
 
-        DataDictionary o = dataDictionaryService.getByValue("education", "8");
+        DataDictionary o = dataDictionaryService.getForObject("education", "8");
         printObject(o);
     }
 
