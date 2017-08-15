@@ -108,92 +108,92 @@ public class ApiResponse<T> extends OperateResult<T> implements Serializable {
                 "page=" + page +
                 "} " + super.toString();
     }
+}
 
-    public class Page {
-        private Integer pageSize;
-        private Integer pageNo;
-        private Long recordCount;
-        private Integer pageCount;
+class Page {
+    private Integer pageSize;
+    private Integer pageNo;
+    private Long recordCount;
+    private Integer pageCount;
 
-        public Integer getPageSize() {
-            return pageSize;
-        }
+    public Integer getPageSize() {
+        return pageSize;
+    }
 
-        public void setPageSize(int pageSize) {
-            this.pageSize = pageSize;
-        }
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
+    }
 
-        public Integer getPageNo() {
+    public Integer getPageNo() {
+        return pageNo;
+    }
+
+    public void setPageNo(int pageNo) {
+        this.pageNo = pageNo;
+    }
+
+    public Long getRecordCount() {
+        return recordCount;
+    }
+
+    public void setRecordCount(long recordCount) {
+        this.recordCount = recordCount;
+    }
+
+    public Integer getPageCount() {
+        return pageCount;
+    }
+
+    public void setPageCount(int pageCount) {
+        this.pageCount = pageCount;
+    }
+
+    /**
+     * 根据pageNo和pageSize计算当前页第一条记录在总结果集中的位置,序号从1开始.
+     */
+    public int getFirst() {
+        return (pageNo - 1) * pageSize + 1;
+    }
+
+    /**
+     * 是否还有下一页.
+     */
+    public boolean isHasNext() {
+        return pageNo < pageCount;
+    }
+
+    /**
+     * 取得下页的页号, 序号从1开始. 当前页为尾页时仍返回尾页序号.
+     */
+    public int getNextPage() {
+        if (isHasNext()) {
+            return pageNo + 1;
+        } else {
             return pageNo;
         }
+    }
 
-        public void setPageNo(int pageNo) {
-            this.pageNo = pageNo;
-        }
+    /**
+     * 是否还有上一页.
+     */
+    public boolean isHasPre() {
+        return pageNo > 1;
+    }
 
-        public Long getRecordCount() {
-            return recordCount;
+    /**
+     * 取得上页的页号, 序号从1开始. 当前页为首页时返回首页序号.
+     */
+    public int getPrePage() {
+        if (isHasPre()) {
+            return pageNo - 1;
+        } else {
+            return pageNo;
         }
+    }
 
-        public void setRecordCount(long recordCount) {
-            this.recordCount = recordCount;
-        }
-
-        public Integer getPageCount() {
-            return pageCount;
-        }
-
-        public void setPageCount(int pageCount) {
-            this.pageCount = pageCount;
-        }
-
-        /**
-         * 根据pageNo和pageSize计算当前页第一条记录在总结果集中的位置,序号从1开始.
-         */
-        public int getFirst() {
-            return (pageNo - 1) * pageSize + 1;
-        }
-
-        /**
-         * 是否还有下一页.
-         */
-        public boolean isHasNext() {
-            return pageNo < pageCount;
-        }
-
-        /**
-         * 取得下页的页号, 序号从1开始. 当前页为尾页时仍返回尾页序号.
-         */
-        public int getNextPage() {
-            if (isHasNext()) {
-                return pageNo + 1;
-            } else {
-                return pageNo;
-            }
-        }
-
-        /**
-         * 是否还有上一页.
-         */
-        public boolean isHasPre() {
-            return pageNo > 1;
-        }
-
-        /**
-         * 取得上页的页号, 序号从1开始. 当前页为首页时返回首页序号.
-         */
-        public int getPrePage() {
-            if (isHasPre()) {
-                return pageNo - 1;
-            } else {
-                return pageNo;
-            }
-        }
-
-        @Override
-        public String toString() {
-            return "Page [getPageSize()=" + getPageSize() + ", getPageNo()=" + getPageNo() + ", getRecordCount()="
-                    + getRecordCount() + ", getPageCount()=" + getPageCount() + "]";
-        }
+    @Override
+    public String toString() {
+        return "Page [getPageSize()=" + getPageSize() + ", getPageNo()=" + getPageNo() + ", getRecordCount()="
+                + getRecordCount() + ", getPageCount()=" + getPageCount() + "]";
     }
 }
