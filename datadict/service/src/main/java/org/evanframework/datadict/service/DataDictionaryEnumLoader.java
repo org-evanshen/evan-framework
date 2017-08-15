@@ -1,13 +1,14 @@
 package org.evanframework.datadict.service;
 
+import org.evanframework.datadict.dto.DataDictionary;
 import org.evanframework.datadict.dto.DataDictionaryEnum;
 import org.evanframework.datadict.dto.DataDictionaryList;
-import org.evanframework.datadict.dto.DataDictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -24,6 +25,7 @@ import java.util.Set;
  * @author <a href="mailto:277469513@qq.com">Evan.Shen</a>
  * @version 2012-9-20 下午3:41:17
  */
+@Component
 public class DataDictionaryEnumLoader implements ApplicationContextAware {
     private final static Logger log = LoggerFactory.getLogger(DataDictionaryEnumLoader.class);
 
