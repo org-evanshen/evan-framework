@@ -25,7 +25,15 @@ public interface DatadictionaryProxy {
                                   boolean isIncludeDeleted);
 
     /**
-     * 根据分组获取该分组下的数据字典，以Map<group, PubDataDictionary>方式返回
+     * 根据分组和值获取数据字典对象
+     *
+     * @param group
+     * @return
+     */
+    DataDictionary getForObject(String group,String value);
+
+    /**
+     * 根据分组获取该分组下的数据字典，以Map<group, DataDictionary>方式返回
      *
      * @param group
      * @return

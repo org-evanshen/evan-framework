@@ -58,6 +58,21 @@ public class PubDataDictionaryManager implements DatadictionaryProxy {
         return ddl;
     }
 
+    /**
+     * 根据分组和值获取数据字典对象
+     *
+     * @param group
+     * @return
+     */
+    public DataDictionary getForObject(String group, String value) {
+        DataDictionary dto = null;
+        PubDataDictionary model = pubDataDictionaryMapper.load(group, value);
+        if (model != null) {
+            dto = model.toDTO();
+        }
+        return dto;
+    }
+
     public Map<String, DataDictionary> getForMap(String group) {
         PubDataDictionaryQuery query = new PubDataDictionaryQuery();
         query.setDictGroup(group);

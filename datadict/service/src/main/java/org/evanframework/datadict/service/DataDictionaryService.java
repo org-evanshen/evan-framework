@@ -1,16 +1,17 @@
 package org.evanframework.datadict.service;
 
+import org.apache.commons.lang3.StringUtils;
 import org.evanframework.datadict.DatadictionaryProxy;
-import org.evanframework.datadict.dto.DataDictionary;
-import org.evanframework.datadict.dto.DataDictionaryList;
 import org.evanframework.datadict.cache.DataDictionaryCacheForData;
 import org.evanframework.datadict.cache.DataDictionaryCacheForName;
-import org.apache.commons.lang3.StringUtils;
+import org.evanframework.datadict.dto.DataDictionary;
+import org.evanframework.datadict.dto.DataDictionaryList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -149,24 +150,21 @@ public class DataDictionaryService {
         }
 
         if (datadictionaryProxy != null) {
-            Map<String, DataDictionary> map = datadictionaryProxy.getForMap(group);
-            if (!map.isEmpty()) {
+            dd = datadictionaryProxy.getForObject(group, value);
+            if (dd != null) {
                 if (log.isTraceEnabled()) {
-                    log.trace("find data dictionary the key is :[" + group + "],value is: [" + value + "] in database");
+                    log.trace("find data dictionary the key is :[" + group + "],value is: [" + value + "] from base service");
                     log.trace("put data dictionary the key is [" + group + "], value is: [" + value + "]");
                 }
-                dd = map.get(value);
-                if (dd != null) {
-                    dataDictionaryCacheForName.put(group + DATA_GROUP_AND_VALUE_SPLIT + value, dd);
-                }
+                dataDictionaryCacheForName.put(group + DATA_GROUP_AND_VALUE_SPLIT + value, dd);
             }
         }
-
         return dd;
     }
 
     /**
      * group/DataDictionary的本地缓存用法，用于一个请求中，列表循环根据group获取DataDictionary的场景，请求结束缓存即刻消失
+     *
      * @param group
      * @param value
      * @param localCache
@@ -194,6 +192,7 @@ public class DataDictionaryService {
 
     /**
      * group/dictdictText的本地缓存用法，用于一个请求中，列表循环根据group获取DataDictionary.getText()的场景，请求结束缓存即刻消失
+     *
      * @param group
      * @param value
      * @param localCache
@@ -219,5 +218,18 @@ public class DataDictionaryService {
         return returnV;
     }
 
-
+    /**
+     * @param group
+     * @return
+     */
+    public Map<String, DataDictionary> getForMap(String group) {
+        Map<String, DataDictionary> map = new HashMap<>();
+        DataDictionaryList dataDictionaryList = getForList(group);
+        if (dataDictionaryList != null && !dataDictionaryList.isEmpty()) {
+            for (DataDictionary e : dataDictionaryList) {
+                map.put(e.getValue(),e);
+            }
+        }
+        return map;
+    }
 }

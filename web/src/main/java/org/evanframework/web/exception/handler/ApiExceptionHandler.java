@@ -90,7 +90,7 @@ public class ApiExceptionHandler
      * @return
      */
     @ExceptionHandler(value = {NoHandlerFoundException.class})
-    protected Object handleNoHandlerFoundException(NoHandlerFoundException ex, WebRequest request) {
+    public Object handleNoHandlerFoundException(NoHandlerFoundException ex, WebRequest request) {
         log.warn(ex.getMessage());
         ApiResponse res = ApiResponse.create();
         res.setCode(OperateCommonResultType.HTTP_URL_INVALID.getCode());
@@ -106,7 +106,7 @@ public class ApiExceptionHandler
      * @return
      */
     @ExceptionHandler(value = {MethodArgumentNotValidException.class})
-    protected Object handleMethodArgumentNotValid(MethodArgumentNotValidException ex, WebRequest request) {
+    public Object handleMethodArgumentNotValid(MethodArgumentNotValidException ex, WebRequest request) {
         log.warn(ex.getMessage());
 
         BindingResult bindingResult = ex.getBindingResult();
@@ -136,7 +136,7 @@ public class ApiExceptionHandler
      * @return
      */
     @ExceptionHandler(value = {HttpRequestMethodNotSupportedException.class})
-    protected Object handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex,
+    public Object handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex,
                                                          HttpHeaders headers, HttpStatus status, WebRequest request) {
         log.warn(ex.getMessage(), ex);
         ApiResponse res = ApiResponse.create();
@@ -154,7 +154,7 @@ public class ApiExceptionHandler
      * @return
      */
     @ExceptionHandler(value = {HttpMediaTypeNotSupportedException.class})
-    protected Object handleHttpMediaTypeNotSupported(HttpMediaTypeNotSupportedException ex, WebRequest request) {
+    public Object handleHttpMediaTypeNotSupported(HttpMediaTypeNotSupportedException ex, WebRequest request) {
         HttpHeaders headers = new HttpHeaders();
         List<MediaType> mediaTypes = ex.getSupportedMediaTypes();
         if (!CollectionUtils.isEmpty(mediaTypes)) {
@@ -177,7 +177,7 @@ public class ApiExceptionHandler
      * @return
      */
     @ExceptionHandler(value = {BindException.class})
-    protected Object handleBindException(BindException ex, WebRequest request) {
+    public Object handleBindException(BindException ex, WebRequest request) {
         List<FieldError> errors = ex.getFieldErrors();
 
         StringBuilder sb = new StringBuilder(128);
