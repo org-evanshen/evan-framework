@@ -89,15 +89,15 @@ public class DataDictionaryService {
      */
 
     public DataDictionaryList getForList(String group, String parentValue) {
-        if (StringUtils.isBlank(group) || StringUtils.isBlank(parentValue)) {
+        if (StringUtils.isBlank(group)){
             return null;
         }
-        String key = null;
-        if (StringUtils.isEmpty(parentValue)) {
-            key = group;
-        } else {
-            key = group + DATA_GROUP_AND_VALUE_SPLIT + parentValue;
+
+        if(StringUtils.isBlank(parentValue)){
+            return getForList(group);
         }
+
+        String key = group + DATA_GROUP_AND_VALUE_SPLIT + parentValue;
         // 先从缓存中取
         DataDictionaryList dds = dataDictionaryCacheForData.get(key);
 
