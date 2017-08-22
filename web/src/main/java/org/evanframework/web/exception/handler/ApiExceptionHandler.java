@@ -17,6 +17,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -137,7 +138,7 @@ public class ApiExceptionHandler
      */
     @ExceptionHandler(value = {HttpRequestMethodNotSupportedException.class})
     public Object handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex,
-                                                         HttpHeaders headers, HttpStatus status, WebRequest request) {
+                                                      HttpHeaders headers, HttpStatus status, WebRequest request) {
         log.warn(ex.getMessage(), ex);
         ApiResponse res = ApiResponse.create();
         res.setCode(OperateCommonResultType.HTTP_METHOD_INVALID.getCode());
@@ -236,9 +237,21 @@ public class ApiExceptionHandler
                                                      WebRequest request) {
         MethodParameter methodParameter = ex.getParameter();
 
-        ApiResponse res= ApiResponse.create();
+        ApiResponse res = ApiResponse.create();
         res.setCode(OperateCommonResultType.PARAMETER_INVALID.getCode());
         res.setMsg("参数[" + methodParameter.getParameterName() + "]不正确," + ex.getMessage());
+        return handleExceptionInternal(ex, res, null, request);
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public Object handleMissingServletRequestParameterException(MissingServletRequestParameterException ex,
+                                                                WebRequest request) {
+        String parameterName = ex.getParameterName();
+        String parameterType = ex.getParameterType();
+
+        ApiResponse res = ApiResponse.create();
+        res.setCode(OperateCommonResultType.PARAMETER_INVALID.getCode());
+        res.setMsg("参数[" + parameterName + "(" + parameterType + ")]不正确," + ex.getMessage());
         return handleExceptionInternal(ex, res, null, request);
     }
 
