@@ -446,6 +446,19 @@ public class JdbcUtils extends org.springframework.jdbc.support.JdbcUtils {
         return str.toString();
     }
 
+    public static String mergeStrings(Collection<?> args) {
+        StringBuilder str = new StringBuilder(128);
+        int i = 0;
+        for (Object s : args) {
+            if (i > 0) {
+                str.append(",");
+            }
+            str.append("'" + s + "'");
+            i++;
+        }
+        return str.toString();
+    }
+
     /**
      * Like 类型
      * <p/>
