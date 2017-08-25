@@ -1,10 +1,13 @@
 package org.evanframework.utils;
 
-import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
+import java.security.InvalidKeyException;
 import java.security.Key;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 /**
@@ -20,13 +23,13 @@ public class AESUtils {
      * 密钥算法
      */
     public static final String KEY_ALGORITHM = "AES";
-
     /**
      * 加密/解密算法 / 工作模式 / 填充方式
      * Java 6支持PKCS5Padding填充方式
      * Bouncy Castle支持PKCS7Padding填充方式
      */
     public static final String CIPHER_ALGORITHM = "AES/ECB/PKCS5Padding";
+    private static final Logger LOGGER = LoggerFactory.getLogger(AESUtils.class);
 
     /**
      * 转换密钥
@@ -35,7 +38,7 @@ public class AESUtils {
      * @return Key 密钥
      * @throws Exception
      */
-    private static Key toKey(byte[] key) throws Exception {
+    private static Key toKey(byte[] key) {
 
         // 实例化AES密钥材料
         SecretKey secretKey = new SecretKeySpec(key, KEY_ALGORITHM);
@@ -65,36 +68,6 @@ public class AESUtils {
     }
 
     /**
-     * 解密
-     *
-     * @param data     待解密数据
-     * @param password 密钥
-     * @return byte[] 解密数据
-     * @throws Exception
-     */
-    public static String decrypt(String data, String password) throws Exception {
-        byte[] key = initKey(password);
-
-        // 还原密钥
-        Key k = toKey(key);
-
-//        Key k = getKey(password);
-
-		/*
-         * 实例化
-		 * 使用PKCS7Padding填充方式，按如下方式实现
-		 * Cipher.getInstance(CIPHER_ALGORITHM, "BC");
-		 */
-        Cipher cipher = Cipher.getInstance(KEY_ALGORITHM);
-
-        // 初始化，设置为解密模式
-        cipher.init(Cipher.DECRYPT_MODE, k);
-
-        // 执行操作
-        return new String(cipher.doFinal(parseHexStr2Byte(data)));
-    }
-
-    /**
      * 加密
      *
      * @param data     待加密数据
@@ -102,25 +75,87 @@ public class AESUtils {
      * @return byte[] 加密数据
      * @throws Exception
      */
-    public static String encrypt(String data, String password) throws Exception {
+    public static String encrypt(String data, String password) {
         byte[] key = initKey(password);
         // 还原密钥
         Key k = toKey(key);
-
-//        Key k = getKey(password);
 
 		/*
          * 实例化
 		 * 使用PKCS7Padding填充方式，按如下方式实现
 		 * Cipher.getInstance(CIPHER_ALGORITHM, "BC");
 		 */
-        Cipher cipher = Cipher.getInstance(KEY_ALGORITHM);
+        Cipher cipher = null;
+        try {
+            cipher = Cipher.getInstance(KEY_ALGORITHM);
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
+            LOGGER.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
 
         // 初始化，设置为加密模式
-        cipher.init(Cipher.ENCRYPT_MODE, k);
+        try {
+            cipher.init(Cipher.ENCRYPT_MODE, k);
+        } catch (InvalidKeyException e) {
+            LOGGER.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+
+        byte[] bytes = null;
+        try {
+            bytes = cipher.doFinal(data.getBytes());
+        } catch (IllegalBlockSizeException | BadPaddingException e) {
+            LOGGER.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
 
         // 执行操作
-        return parseByte2HexStr(cipher.doFinal(data.getBytes()));
+        return parseByte2HexStr(bytes);
+    }
+
+    /**
+     * 解密
+     *
+     * @param data     待解密数据
+     * @param password 密钥
+     * @return byte[] 解密数据
+     * @throws Exception
+     */
+    public static String decrypt(String data, String password) {
+        byte[] key = initKey(password);
+
+        // 还原密钥
+        Key k = toKey(key);
+        /*
+         * 实例化
+		 * 使用PKCS7Padding填充方式，按如下方式实现
+		 * Cipher.getInstance(CIPHER_ALGORITHM, "BC");
+		 */
+        Cipher cipher = null;
+        try {
+            cipher = Cipher.getInstance(KEY_ALGORITHM);
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
+            LOGGER.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+
+        // 初始化，设置为解密模式
+        try {
+            cipher.init(Cipher.DECRYPT_MODE, k);
+        } catch (InvalidKeyException e) {
+            LOGGER.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+        byte[] bytes;
+        try {
+            bytes = cipher.doFinal(parseHexStr2Byte(data));
+        } catch (IllegalBlockSizeException | BadPaddingException e) {
+            LOGGER.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+
+        // 执行操作
+        return new String(bytes);
     }
 
     /**
@@ -129,13 +164,25 @@ public class AESUtils {
      * @return byte[] 二进制密钥
      * @throws Exception
      */
-    private static byte[] initKey(String password) throws Exception {
+    private static byte[] initKey(String password) {
 
         // 实例化
-        KeyGenerator kg = KeyGenerator.getInstance(KEY_ALGORITHM);
+        KeyGenerator kg = null;
+        try {
+            kg = KeyGenerator.getInstance(KEY_ALGORITHM);
+        } catch (NoSuchAlgorithmException e) {
+            LOGGER.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
 
         //防止linux下 随机生成key
-        SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
+        SecureRandom secureRandom = null;
+        try {
+            secureRandom = SecureRandom.getInstance("SHA1PRNG");
+        } catch (NoSuchAlgorithmException e) {
+            LOGGER.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
         secureRandom.setSeed(password.getBytes());
         /*
          * AES 要求密钥长度为 128位、192位或 256位

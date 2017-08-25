@@ -1,8 +1,8 @@
 package org.evanframework.persistence.jdbc;
 
-import org.evanframework.query.QueryParam;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.evanframework.query.QueryParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.RowMapper;
@@ -385,78 +385,58 @@ public class JdbcUtils extends org.springframework.jdbc.support.JdbcUtils {
         return str.toString();
     }
 
-    // public static <T> T getBeanFromResultSet(Class<T> c, ResultSet rs,
-    // String[] columns) throws SQLException {
-    // T o = null;
-    // try {
-    // o = (T) c.newInstance();
-    // } catch (InstantiationException e) {
-    // throw new RuntimeException(e);
-    // } catch (IllegalAccessException e) {
-    // throw new RuntimeException(e);
-    // }
-    // if (o != null) {
-    // for (String column : columns) {
-    // Object obj = rs.getObject(column);
-    // if (obj != null) {
-    // String a = JdbcUtils.toFirstCharLow(convertDBNameToJavaName(column));
-    // BeanUtils.setProperty(o, a, obj);
-    // }
-    // }
-    // }
-    // return o;
-    // }
-
-    public static String mergeIntsToString(Collection<?> collection) {
+    public static String joinNumbersToString(Collection<?> collection) {
         StringBuilder str = new StringBuilder(128);
         int i = 0;
         for (Object s : collection) {
-            if (i > 0) {
-                str.append(",");
-            }
-            str.append(s);
-            i++;
+            i = joinNumbersInner(str, i, s);
         }
         return str.toString();
     }
 
-    public static String mergeIntsToString(Object[] collection) {
+    public static String joinNumbersToString(Object[] collection) {
         StringBuilder str = new StringBuilder(128);
         int i = 0;
         for (Object s : collection) {
-            if (i > 0) {
-                str.append(",");
-            }
-            str.append(s);
-            i++;
+            i = joinNumbersInner(str, i, s);
         }
         return str.toString();
     }
 
-    public static String mergeStrings(String[] args) {
+    private static int joinNumbersInner(StringBuilder str, int i, Object s) {
+        if (i > 0) {
+            str.append(",");
+        }
+        str.append(s);
+        i++;
+        return i;
+    }
+
+    public static String joinStringsToString(String[] args) {
         StringBuilder str = new StringBuilder(128);
         int i = 0;
         for (Object s : args) {
-            if (i > 0) {
-                str.append(",");
-            }
-            str.append("'" + s + "'");
-            i++;
+            i = joinStringsToStringInner(str, i, s);
         }
         return str.toString();
     }
 
-    public static String mergeStrings(Collection<?> args) {
+    public static String joinStringsToString(Collection<?> args) {
         StringBuilder str = new StringBuilder(128);
         int i = 0;
         for (Object s : args) {
-            if (i > 0) {
-                str.append(",");
-            }
-            str.append("'" + s + "'");
-            i++;
+            i = joinStringsToStringInner(str, i, s);
         }
         return str.toString();
+    }
+
+    private static int joinStringsToStringInner(StringBuilder str, int i, Object s) {
+        if (i > 0) {
+            str.append(",");
+        }
+        str.append("'" + s + "'");
+        i++;
+        return i;
     }
 
     /**
