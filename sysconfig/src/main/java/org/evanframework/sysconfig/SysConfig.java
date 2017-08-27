@@ -9,7 +9,7 @@ package org.evanframework.sysconfig;
  */
 public interface SysConfig {
 	enum Profile {
-		DEVELOP, TEST, PRODUCT
+		DEV, TEST, PRODUCT
 	}
 
 	/**
@@ -23,6 +23,8 @@ public interface SysConfig {
 
 	/** 开发环境 | 测试环境 | 生产环境 */
 	Profile getProfile();
+
+	Boolean isDebug();
 
 	/** 应用编号 */
 	String getAppCode();

@@ -104,7 +104,7 @@ public class WebContextTool {
     }
 
     public boolean isDebug() {
-        return SysConfig.Profile.DEVELOP.equals(sysConfig.getProfile());
+        return SysConfig.Profile.DEV.equals(sysConfig.getProfile());
     }
 
     public boolean isProduct() {

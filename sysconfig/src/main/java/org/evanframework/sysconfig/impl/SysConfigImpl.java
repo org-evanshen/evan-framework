@@ -1,7 +1,7 @@
 package org.evanframework.sysconfig.impl;
 
-import org.evanframework.sysconfig.SysConfig;
 import org.apache.commons.lang3.StringUtils;
+import org.evanframework.sysconfig.SysConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
@@ -16,14 +16,13 @@ import org.springframework.core.env.Environment;
  * @version %I%, %G%
  */
 public class SysConfigImpl implements SysConfig {
-    private static Logger logger = LoggerFactory.getLogger(SysConfigImpl.class);
-
     private final static String DEFAULT_WEB_ENCODING = "UTF-8";
     //private final static String KEY_IS_WRITE_TO_OSS = "isWriteToOss";
     private final static String KEY_PROFILE = "profile";
+    private final static String KEY_PROFILE2 = "spring.profiles.active";
     private final static String KEY_APP_CODE1 = "spring.application.name";
     private final static String KEY_APP_CODE2 = "app.code";
-
+    private static Logger logger = LoggerFactory.getLogger(SysConfigImpl.class);
     //private AppPropertyPlaceholderConfigurer propertyConfigurer;
     private String appCode;
     private SysConfig.Profile profile = Profile.PRODUCT;
@@ -35,7 +34,10 @@ public class SysConfigImpl implements SysConfig {
             throw new IllegalStateException("Environment is not inited, please call method [setEnvironment]");
         }
 
-         String profile = environment.getProperty(KEY_PROFILE);
+        String profile = environment.getProperty(KEY_PROFILE2);
+        if (StringUtils.isBlank(profile)) {
+            profile = environment.getProperty(KEY_PROFILE);
+        }
         if (StringUtils.isBlank(profile)) {
             profile = environment.getProperty("app." + KEY_PROFILE);
         }
@@ -43,7 +45,7 @@ public class SysConfigImpl implements SysConfig {
             try {
                 this.profile = Profile.valueOf(profile.toUpperCase());
             } catch (Exception ex) {
-                logger.error("String [" + profile + "] can't convert to enun [Profile]", ex);
+                logger.error("String [" + profile + "] can't convert to enum [Profile]", ex);
             }
         }
 //		String tmp = environment.getProperty(SysConfigImpl.KEY_IS_WRITE_TO_OSS);
@@ -87,6 +89,11 @@ public class SysConfigImpl implements SysConfig {
     @Override
     public Profile getProfile() {
         return profile;
+    }
+
+    @Override
+    public Boolean isDebug() {
+        return Profile.DEV.equals(profile) ;
     }
 
     /**
