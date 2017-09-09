@@ -131,18 +131,15 @@ public class ApiExceptionHandler
      * HTTP 请求方式不正确
      *
      * @param ex
-     * @param headers
-     * @param status
      * @param request
      * @return
      */
     @ExceptionHandler(value = {HttpRequestMethodNotSupportedException.class})
-    public Object handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex,
-                                                      HttpHeaders headers, HttpStatus status, WebRequest request) {
+    public Object handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex, WebRequest request) {
         log.warn(ex.getMessage(), ex);
         ApiResponse res = ApiResponse.create();
         res.setCode(OperateCommonResultType.HTTP_METHOD_INVALID.getCode());
-        res.setMsg("请求的 Http Method [" + ex.getMethod() + "] 不支持, 支持的methods[" + ex.getSupportedHttpMethods() + "]");
+        res.setMsg("请求的 Http Method [" + ex.getMethod() + "] 不支持, 支持的methods" + ex.getSupportedHttpMethods());
 
         return handleExceptionInternal(ex, res, null, request);
     }
@@ -165,7 +162,7 @@ public class ApiExceptionHandler
         log.warn(ex.getMessage(), ex);
         ApiResponse res = ApiResponse.create();
         res.setCode(OperateCommonResultType.HTTP_MEDIA_TYPE_INVALID.getCode());
-        res.setMsg("请求的 media [" + ex.getContentType() + "] 不支持, 支持的 MEDIA_TYPE [" + ex.getSupportedMediaTypes() + "]");
+        res.setMsg("请求的 media [" + ex.getContentType() + "] 不支持, 支持的 MEDIA_TYPE " + ex.getSupportedMediaTypes());
 
         return handleExceptionInternal(ex, res, headers, request);
     }
