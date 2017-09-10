@@ -19,10 +19,9 @@ import java.util.Vector;
  * @since 1.0
  */
 public class RedisTemplateCreator {
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final static Logger LOGGER = LoggerFactory.getLogger(RedisTemplateCreator.class);
 
     private final static int DATABASE_COUNT = 16;//Redis16个库
-
     //支持多数据库，redis共16个数据库
     private static final Vector<RedisTemplate> redisTemplates = new Vector<RedisTemplate>(DATABASE_COUNT);
 
@@ -49,10 +48,8 @@ public class RedisTemplateCreator {
         } catch (IllegalAccessException ex) {
             throw new IllegalStateException("RedisTemplateCreator init fail," + ex.getMessage(), ex);
         }
-        //this.sentinelConfig = sentinelConfig;
-        if(logger.isDebugEnabled()) {
-            logger.debug("RedisTemplateCreator inited,{},{}", connectionFactory, sentinelConfig);
-        }
+
+        LOGGER.info("RedisTemplateCreator inited,{},{}", connectionFactory, sentinelConfig);
     }
 
     public RedisTemplate getRedisTemplate(int databaseIndex) {
@@ -93,13 +90,13 @@ public class RedisTemplateCreator {
             redisTemplate.afterPropertiesSet();
             redisTemplates.set(databaseIndex, redisTemplate);
 
-            if(logger.isDebugEnabled()) {
-                logger.debug("RedisTemplate inited, dababase is [{}]", databaseIndex);
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("RedisTemplate inited, dababase is [{}]", databaseIndex);
             }
         } else {
             redisTemplate = redisTemplates.get(databaseIndex);
-            if(logger.isDebugEnabled()) {
-                logger.debug("get RedisTemplate, dababase is [{}]", databaseIndex);
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("get RedisTemplate, dababase is [{}]", databaseIndex);
             }
         }
         return redisTemplate;

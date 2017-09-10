@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
  * @since 1.0
  */
 public class RedisUtil {
-    private static final Logger log = LoggerFactory.getLogger(RedisUtil.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RedisUtil.class);
 
     private RedisTemplate<Serializable, Serializable> redisTemplate;
 
@@ -47,7 +47,7 @@ public class RedisUtil {
 //            redisKeyPrefix = "";
 //        }
 
-        //log.info("Redis client inited,use[org.springframework.data.redis]");
+        //LOGGER.info("Redis client inited,use[org.springframework.data.redis]");
     }
 
 //    public void destroy() {
@@ -61,8 +61,8 @@ public class RedisUtil {
     public void put(Serializable objectTypeKey, Serializable objectKey, final Object o, Integer expireSeconds) {
         checkInited();
         if (objectKey != null && o != null) {
-            if (log.isDebugEnabled()) {
-                log.debug(String.format("Put redis objectTypeKey is [%s],objectKey is [%s], value is [%s]",
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug(String.format("Put redis objectTypeKey is [%s],objectKey is [%s], value is [%s]",
                         objectTypeKey, objectKey, o));
             }
             String fullObjectTypeKey = getFullObjectTypeKey(objectTypeKey);
@@ -72,12 +72,12 @@ public class RedisUtil {
                 }
                 hashOperations.put(fullObjectTypeKey, String.valueOf(objectKey), o);
             } catch (RuntimeException ex) {
-                log.error("Put redis error,fullObjectTypeKey is [" + fullObjectTypeKey + "],objectKey is [" + objectKey
+                LOGGER.error("Put redis error,fullObjectTypeKey is [" + fullObjectTypeKey + "],objectKey is [" + objectKey
                         + "]," + ex.getMessage(), ex);
             }
         } else {
-            if (log.isDebugEnabled()) {
-                log.debug("No redis put");
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("No redis put");
             }
         }
     }
@@ -92,19 +92,19 @@ public class RedisUtil {
             try {
                 o = hashOperations.get(getFullObjectTypeKey(objectTypeKey), String.valueOf(objectKey));
             } catch (RuntimeException ex) {
-                log.error("Get redis error,fullObjectTypeKey is [" + fullObjectTypeKey + "],objectKey is [" + objectKey
+                LOGGER.error("Get redis error,fullObjectTypeKey is [" + fullObjectTypeKey + "],objectKey is [" + objectKey
                         + "]," + ex.getMessage(), ex);
             }
 
             if (o != null) {
                 returnO = (T) o;
-                if (log.isDebugEnabled()) {
-                    log.debug(String.format("Get Put redis objectTypeKey is	[%s],objectKey is [%s],value is [%s]",
+                if (LOGGER.isDebugEnabled()) {
+                    LOGGER.debug(String.format("Get Put redis objectTypeKey is	[%s],objectKey is [%s],value is [%s]",
                             objectTypeKey, objectKey, returnO));
                 }
             } else {
-                if (log.isDebugEnabled()) {
-                    log.debug(String.format("Not find redis objectTypeKey is [%s],objectKey is [%s]", objectTypeKey,
+                if (LOGGER.isDebugEnabled()) {
+                    LOGGER.debug(String.format("Not find redis objectTypeKey is [%s],objectKey is [%s]", objectTypeKey,
                             objectKey));
                 }
             }
@@ -119,7 +119,7 @@ public class RedisUtil {
             try {
                 hashOperations.delete(fullObjectTypeKey, String.valueOf(objectKey));
             } catch (RuntimeException ex) {
-                log.error("Delete redis error,fullObjectTypeKey is [" + fullObjectTypeKey + "],objectKey is ["
+                LOGGER.error("Delete redis error,fullObjectTypeKey is [" + fullObjectTypeKey + "],objectKey is ["
                         + objectKey + "]," + ex.getMessage(), ex);
             }
         }

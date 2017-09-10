@@ -22,7 +22,7 @@ public class SysConfigImpl implements SysConfig {
     private final static String KEY_PROFILE2 = "spring.profiles.active";
     private final static String KEY_APP_CODE1 = "spring.application.name";
     private final static String KEY_APP_CODE2 = "app.code";
-    private static Logger logger = LoggerFactory.getLogger(SysConfigImpl.class);
+    private static Logger LOGGER = LoggerFactory.getLogger(SysConfigImpl.class);
     //private AppPropertyPlaceholderConfigurer propertyConfigurer;
     private String appCode;
     private SysConfig.Profile profile = Profile.PRODUCT;
@@ -35,17 +35,20 @@ public class SysConfigImpl implements SysConfig {
         }
 
         String profile = environment.getProperty(KEY_PROFILE2);
+        LOGGER.info("Environment [{}] is [{}]", KEY_PROFILE2, profile);
         if (StringUtils.isBlank(profile)) {
             profile = environment.getProperty(KEY_PROFILE);
+            LOGGER.info("Environment [{}] is [{}]", KEY_PROFILE, profile);
         }
         if (StringUtils.isBlank(profile)) {
             profile = environment.getProperty("app." + KEY_PROFILE);
+            LOGGER.info("Environment [{}] is [{}]", "app." + KEY_PROFILE, profile);
         }
         if (StringUtils.isNotBlank(profile)) {
             try {
                 this.profile = Profile.valueOf(profile.toUpperCase());
             } catch (Exception ex) {
-                logger.error("String [" + profile + "] can't convert to enum [Profile]", ex);
+                LOGGER.error("String [" + profile + "] can't convert to enum [Profile]", ex);
             }
         }
 //		String tmp = environment.getProperty(SysConfigImpl.KEY_IS_WRITE_TO_OSS);
@@ -57,7 +60,7 @@ public class SysConfigImpl implements SysConfig {
             appCode = environment.getProperty(KEY_APP_CODE2);
         }
 
-        logger.info("系统配置读取组件加载成功，Class is [{}],appCode is [{}],profile is [{}]", this.getClass(), appCode, this.profile);
+        LOGGER.info("加载系统配置读取组件，Class is [{}],appCode is [{}],profile is [{}]", this.getClass(), appCode, profile);
     }
 
     /**
@@ -93,7 +96,7 @@ public class SysConfigImpl implements SysConfig {
 
     @Override
     public Boolean isDebug() {
-        return Profile.DEV.equals(profile) ;
+        return Profile.DEV.equals(profile);
     }
 
     /**
