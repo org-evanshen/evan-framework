@@ -1,5 +1,6 @@
 package org.evanframework.web.exception.handler;
 
+import org.apache.commons.lang3.StringUtils;
 import org.evanframework.dto.ApiResponse;
 import org.evanframework.dto.OperateCommonResultType;
 import org.evanframework.exception.ServiceException;
@@ -36,18 +37,20 @@ import java.util.Set;
 public class ApiExceptionHandler
         //extends ResponseEntityExceptionHandler
 {
-    private static final Logger log = LoggerFactory.getLogger(ApiExceptionHandler.class);
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ApiExceptionHandler.class);
+
+    private static final String WARN = "WARN";
+    private static final String ERROR = "ERROR";
 
     @ExceptionHandler(value = Exception.class)
     public Object handleExceptionExtent(Exception ex, WebRequest request) {
-        log.error(ex.getMessage(), ex);
 
         ApiResponse res = ApiResponse.create();
         res.setCode(OperateCommonResultType.ERROR.getCode());
         res.setMsg("系统维护中，请稍候再试");
 
-        return handleExceptionInternal(ex, res, null, request);
+        return handleExceptionInternal(ex, res, null, request, ERROR);
     }
 
     /**
@@ -59,7 +62,7 @@ public class ApiExceptionHandler
      */
     @ExceptionHandler(value = ServiceException.class)
     public Object handleServiceException(ServiceException ex, WebRequest request) {
-        log.warn(ex.getMessage());
+        LOGGER.warn(ex.getMessage());
         ApiResponse res = ApiResponse.create();
         res.setCode(ex.getCode());
         res.setMsg(ex.getMessage());
@@ -76,7 +79,7 @@ public class ApiExceptionHandler
      */
     @ExceptionHandler(value = {IllegalArgumentException.class})
     public Object handleExceptionExtent(IllegalArgumentException ex, WebRequest request) {
-        log.warn(ex.getMessage());
+
         ApiResponse res = ApiResponse.create();
         res.setCode(OperateCommonResultType.PARAMETER_INVALID.getCode());
         res.setMsg(ex.getMessage());
@@ -92,7 +95,7 @@ public class ApiExceptionHandler
      */
     @ExceptionHandler(value = {NoHandlerFoundException.class})
     public Object handleNoHandlerFoundException(NoHandlerFoundException ex, WebRequest request) {
-        log.warn(ex.getMessage());
+
         ApiResponse res = ApiResponse.create();
         res.setCode(OperateCommonResultType.HTTP_URL_INVALID.getCode());
         res.setMsg("请求的地址[" + ex.getRequestURL() + "]不正确," + ex.getMessage());
@@ -108,7 +111,7 @@ public class ApiExceptionHandler
      */
     @ExceptionHandler(value = {MethodArgumentNotValidException.class})
     public Object handleMethodArgumentNotValid(MethodArgumentNotValidException ex, WebRequest request) {
-        log.warn(ex.getMessage());
+
 
         BindingResult bindingResult = ex.getBindingResult();
 
@@ -136,7 +139,7 @@ public class ApiExceptionHandler
      */
     @ExceptionHandler(value = {HttpRequestMethodNotSupportedException.class})
     public Object handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex, WebRequest request) {
-        log.warn(ex.getMessage(), ex);
+
         ApiResponse res = ApiResponse.create();
         res.setCode(OperateCommonResultType.HTTP_METHOD_INVALID.getCode());
         res.setMsg("请求的 Http Method [" + ex.getMethod() + "] 不支持, 支持的methods" + ex.getSupportedHttpMethods());
@@ -159,7 +162,7 @@ public class ApiExceptionHandler
             headers.setAccept(mediaTypes);
         }
 
-        log.warn(ex.getMessage(), ex);
+
         ApiResponse res = ApiResponse.create();
         res.setCode(OperateCommonResultType.HTTP_MEDIA_TYPE_INVALID.getCode());
         res.setMsg("请求的 media [" + ex.getContentType() + "] 不支持, 支持的 MEDIA_TYPE " + ex.getSupportedMediaTypes());
@@ -189,6 +192,7 @@ public class ApiExceptionHandler
         ApiResponse res = ApiResponse.create();
         res.setCode(OperateCommonResultType.PARAMETER_INVALID.getCode());
         res.setMsg("参数不正确, " + sb);
+
 
         return handleExceptionInternal(ex, res, null, request);
     }
@@ -237,6 +241,7 @@ public class ApiExceptionHandler
         ApiResponse res = ApiResponse.create();
         res.setCode(OperateCommonResultType.PARAMETER_INVALID.getCode());
         res.setMsg("参数[" + methodParameter.getParameterName() + "]不正确," + ex.getMessage());
+
         return handleExceptionInternal(ex, res, null, request);
     }
 
@@ -249,6 +254,7 @@ public class ApiExceptionHandler
         ApiResponse res = ApiResponse.create();
         res.setCode(OperateCommonResultType.PARAMETER_INVALID.getCode());
         res.setMsg("参数[" + parameterName + "(" + parameterType + ")]不正确," + ex.getMessage());
+
         return handleExceptionInternal(ex, res, null, request);
     }
 
@@ -261,13 +267,28 @@ public class ApiExceptionHandler
      * @param request
      * @return
      */
-    protected Object handleExceptionInternal(Exception ex, Object body,
-                                             HttpHeaders headers, WebRequest request) {
+    private Object handleExceptionInternal(Exception ex, Object body,
+                                           HttpHeaders headers, WebRequest request, String level) {
+        if (StringUtils.isBlank(level)) {
+            level = WARN;
+        }
+        if (StringUtils.equalsIgnoreCase(level, WARN)) {
+            LOGGER.warn(ex.getMessage(), ex);
+        } else {
+            LOGGER.error(ex.getMessage(), ex);
+        }
+
         setExceptionToRequest(request, ex);
+
         return new ResponseEntity<Object>(body, headers, HttpStatus.OK);
     }
 
-    protected void setExceptionToRequest(WebRequest request, Exception ex) {
+    private Object handleExceptionInternal(Exception ex, Object body,
+                                           HttpHeaders headers, WebRequest request) {
+        return handleExceptionInternal(ex, body, headers, request, WARN);
+    }
+
+    private void setExceptionToRequest(WebRequest request, Exception ex) {
         request.setAttribute("exception", ex, WebRequest.SCOPE_REQUEST);
     }
 }
