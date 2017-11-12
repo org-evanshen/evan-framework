@@ -37,7 +37,7 @@ import java.io.Serializable;
  * @since 1.0
  */
 public class CacheUtil {
-    private static final Logger logger = LoggerFactory.getLogger(CacheUtil.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CacheUtil.class);
     //private static final ConcurrentHashMap<String, CacheUtil> cacheUtilPool = new ConcurrentHashMap<String, CacheUtil>(128);
 
     private RedisUtil redisUtil;
@@ -52,8 +52,8 @@ public class CacheUtil {
         this.ehCacheUtil = ehCacheUtil;
         this.cacheName = ehCacheUtil.getCacheName();
 
-        if(logger.isDebugEnabled()) {
-            logger.debug("CacheUtil inited,cacheName is [{}]", cacheName);
+        if(LOGGER.isDebugEnabled()) {
+            LOGGER.debug("CacheUtil inited,cacheName is [{}]", cacheName);
         }
     }
 
@@ -70,8 +70,16 @@ public class CacheUtil {
         checkCacheUtils();
 
         if (key == null || o == null) {
-            throw new IllegalArgumentException("Param [key] and [o] can't empty");
+            //throw new IllegalArgumentException("Param [key] and [o] can't empty");
+            LOGGER.warn("CacheUtil.put(Serializable key, Serializable o), Param [key] can't empty");
+            return;
         }
+        if (key == null || o == null) {
+            //throw new IllegalArgumentException("Param [key] and [o] can't empty");
+            LOGGER.warn("CacheUtil.put(Serializable key, Serializable o), Param [o] can't empty");
+            return;
+        }
+
         if (redisUtil != null) {
             redisUtil.put(cacheName, key, o, redisExpireSeconds);
         }
@@ -84,7 +92,8 @@ public class CacheUtil {
         checkCacheUtils();
 
         if (key == null) {
-            throw new IllegalArgumentException("Param [key] can't empty");
+            //throw new IllegalArgumentException("Param [key] can't empty");
+            LOGGER.warn("CacheUtil.get(Serializable key, Class<T> cacheClass), Param [o] can't empty");
         }
 
         T o = null;
@@ -106,7 +115,8 @@ public class CacheUtil {
         checkCacheUtils();
 
         if (key == null) {
-            throw new IllegalArgumentException("Param [key] can't empty");
+            //throw new IllegalArgumentException("Param [key] can't empty");
+            LOGGER.warn("CacheUtil.remove(Serializable key), Param [o] can't empty");
         }
         if (redisUtil != null) {
             redisUtil.remove(cacheName, key);
