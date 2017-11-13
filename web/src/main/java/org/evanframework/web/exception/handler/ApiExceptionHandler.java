@@ -267,7 +267,7 @@ public class ApiExceptionHandler
      * @param request
      * @return
      */
-    private Object handleExceptionInternal(Exception ex, Object body,
+    protected Object handleExceptionInternal(Exception ex, Object body,
                                            HttpHeaders headers, WebRequest request, String level) {
         if (StringUtils.isBlank(level)) {
             level = WARN;
@@ -283,7 +283,15 @@ public class ApiExceptionHandler
         return new ResponseEntity<Object>(body, headers, HttpStatus.OK);
     }
 
-    private Object handleExceptionInternal(Exception ex, Object body,
+    /**
+     *
+     * @param ex
+     * @param body
+     * @param headers
+     * @param request
+     * @return
+     */
+    protected Object handleExceptionInternal(Exception ex, Object body,
                                            HttpHeaders headers, WebRequest request) {
         return handleExceptionInternal(ex, body, headers, request, WARN);
     }
