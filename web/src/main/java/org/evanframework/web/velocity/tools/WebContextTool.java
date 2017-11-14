@@ -108,7 +108,7 @@ public class WebContextTool {
     }
 
     public boolean isProduct() {
-        return SysConfig.Profile.PRODUCT.equals(sysConfig.getProfile());
+        return SysConfig.Profile.PRODUCTION.equals(sysConfig.getProfile());
     }
 
     public String getConfigByKey(HttpServletRequest request, String key) {

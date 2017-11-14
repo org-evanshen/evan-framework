@@ -25,7 +25,8 @@ public class SysConfigImpl implements SysConfig {
     private static Logger LOGGER = LoggerFactory.getLogger(SysConfigImpl.class);
     //private AppPropertyPlaceholderConfigurer propertyConfigurer;
     private String appCode;
-    private SysConfig.Profile profile = Profile.PRODUCT;
+    private SysConfig.Profile profile = Profile.PRODUCTION;
+
     private String webEncoding = DEFAULT_WEB_ENCODING;
     private Environment environment;
 
@@ -35,7 +36,7 @@ public class SysConfigImpl implements SysConfig {
         }
 
         String profile = environment.getProperty(KEY_PROFILE2);
-        LOGGER.info("Environment [{}] is [{}]", KEY_PROFILE2, profile);
+        LOGGER.info(">>>>>>>> Environment [{}] is [{}]", KEY_PROFILE2, profile);
         if (StringUtils.isBlank(profile)) {
             profile = environment.getProperty(KEY_PROFILE);
             LOGGER.info("Environment [{}] is [{}]", KEY_PROFILE, profile);
@@ -48,7 +49,7 @@ public class SysConfigImpl implements SysConfig {
             try {
                 this.profile = Profile.valueOf(profile.toUpperCase());
             } catch (Exception ex) {
-                LOGGER.error("String [" + profile + "] can't convert to enum [Profile]", ex);
+                LOGGER.error(">>>>>>>> String [" + profile + "] can't convert to enum [" + Profile.class + "]", ex);
             }
         }
 //		String tmp = environment.getProperty(SysConfigImpl.KEY_IS_WRITE_TO_OSS);

@@ -9,7 +9,7 @@ package org.evanframework.sysconfig;
  */
 public interface SysConfig {
 	enum Profile {
-		DEV, TEST, PRODUCT
+		DEV, TEST, PRODUCTION
 	}
 
 	/**
