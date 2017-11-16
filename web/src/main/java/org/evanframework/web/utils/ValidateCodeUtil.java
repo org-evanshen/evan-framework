@@ -27,7 +27,7 @@ public class ValidateCodeUtil {
         String validateCode = generateValidateCode(validateCodeLength);
         redisUtil.put(OBJECT_TYPE_KEY, cacheKey, validateCode, expireSeconds);
 
-        LOGGER.warn("生成图片验证码：validateCode[{}],cacheKey[{}]", validateCode, cacheKey);
+        LOGGER.info("生成图片验证码：validateCode[{}],cacheKey[{}]", validateCode, cacheKey);
 
         return validateCode;
     }
