@@ -33,7 +33,13 @@ mvn-deploy-release.sh(.bat) $version
 //参数version--要发布的目标版本
 ```
 
+
+
 ### 版本说明
+
+#### v2.1 20171204
+1.AESUtil加解密失败时原来抛出runtimeException改为AESException
+
 #### v1.1.4 20170105
 1.cache模块增加判断缓存是否存在的方法
 

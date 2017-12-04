@@ -11,11 +11,13 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 /**
- * create at 2016/5/26
+ * AES工具
  *
  * @author <a href="mailto:taofei@">Paul Yao</a>
- * @version %I%, %G%
- * @see
+ * @version 2016/5/26
+ * @since 1.0
+ * shenwei modify at 20171204<br>
+ * 加解密失败时原来抛出runtimeException改为AESException
  */
 public class AESUtils {
 
@@ -55,7 +57,7 @@ public class AESUtils {
      * @param strKey
      * @return
      */
-    public static SecretKey getKey(String strKey) {
+    public static SecretKey getKey(String strKey) throws AESException {
         try {
             KeyGenerator _generator = KeyGenerator.getInstance("AES");
             SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
@@ -63,7 +65,7 @@ public class AESUtils {
             _generator.init(128, secureRandom);
             return _generator.generateKey();
         } catch (Exception e) {
-            throw new RuntimeException(" 初始化密钥出现异常 ");
+            throw new AESException("初始化密钥出现异常," + e.getMessage(), e);
         }
     }
 
@@ -75,7 +77,7 @@ public class AESUtils {
      * @return byte[] 加密数据
      * @throws Exception
      */
-    public static String encrypt(String data, String password) {
+    public static String encrypt(String data, String password) throws AESException {
         byte[] key = initKey(password);
         // 还原密钥
         Key k = toKey(key);
@@ -89,24 +91,24 @@ public class AESUtils {
         try {
             cipher = Cipher.getInstance(KEY_ALGORITHM);
         } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
-            LOGGER.error(e.getMessage(), e);
-            throw new RuntimeException(e);
+            //LOGGER.error(e.getMessage(), e);
+            throw new AESException(e.getMessage(), e);
         }
 
         // 初始化，设置为加密模式
         try {
             cipher.init(Cipher.ENCRYPT_MODE, k);
         } catch (InvalidKeyException e) {
-            LOGGER.error(e.getMessage(), e);
-            throw new RuntimeException(e);
+            //LOGGER.error(e.getMessage(), e);
+            throw new AESException(e.getMessage(), e);
         }
 
         byte[] bytes = null;
         try {
             bytes = cipher.doFinal(data.getBytes());
         } catch (IllegalBlockSizeException | BadPaddingException e) {
-            LOGGER.error(e.getMessage(), e);
-            throw new RuntimeException(e);
+            //LOGGER.error(e.getMessage(), e);
+            throw new AESException(e.getMessage(), e);
         }
 
         // 执行操作
@@ -121,7 +123,7 @@ public class AESUtils {
      * @return byte[] 解密数据
      * @throws Exception
      */
-    public static String decrypt(String data, String password) {
+    public static String decrypt(String data, String password) throws AESException {
         byte[] key = initKey(password);
 
         // 还原密钥
@@ -135,23 +137,23 @@ public class AESUtils {
         try {
             cipher = Cipher.getInstance(KEY_ALGORITHM);
         } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
-            LOGGER.error(e.getMessage(), e);
-            throw new RuntimeException(e);
+            //LOGGER.error(e.getMessage(), e);
+            throw new AESException(e.getMessage(), e);
         }
 
         // 初始化，设置为解密模式
         try {
             cipher.init(Cipher.DECRYPT_MODE, k);
         } catch (InvalidKeyException e) {
-            LOGGER.error(e.getMessage(), e);
-            throw new RuntimeException(e);
+            //LOGGER.error(e.getMessage(), e);
+            throw new AESException(e.getMessage(), e);
         }
         byte[] bytes;
         try {
             bytes = cipher.doFinal(parseHexStr2Byte(data));
         } catch (IllegalBlockSizeException | BadPaddingException e) {
-            LOGGER.error(e.getMessage(), e);
-            throw new RuntimeException(e);
+            //LOGGER.error(e.getMessage(), e);
+            throw new AESException(e.getMessage(), e);
         }
 
         // 执行操作
@@ -164,15 +166,15 @@ public class AESUtils {
      * @return byte[] 二进制密钥
      * @throws Exception
      */
-    private static byte[] initKey(String password) {
+    private static byte[] initKey(String password) throws AESException {
 
         // 实例化
         KeyGenerator kg = null;
         try {
             kg = KeyGenerator.getInstance(KEY_ALGORITHM);
         } catch (NoSuchAlgorithmException e) {
-            LOGGER.error(e.getMessage(), e);
-            throw new RuntimeException(e);
+            //LOGGER.error(e.getMessage(), e);
+            throw new AESException(e.getMessage(), e);
         }
 
         //防止linux下 随机生成key
@@ -180,8 +182,8 @@ public class AESUtils {
         try {
             secureRandom = SecureRandom.getInstance("SHA1PRNG");
         } catch (NoSuchAlgorithmException e) {
-            LOGGER.error(e.getMessage(), e);
-            throw new RuntimeException(e);
+            //LOGGER.error(e.getMessage(), e);
+            throw new AESException(e.getMessage(), e);
         }
         secureRandom.setSeed(password.getBytes());
         /*
