@@ -11,6 +11,8 @@ import org.springframework.web.util.UrlPathHelper;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.Set;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 /**
  * <p>
@@ -21,7 +23,9 @@ import java.io.IOException;
  */
 public abstract class AbstractOperatorContextFilter implements Filter {
 
-    private static final Logger log = LoggerFactory.getLogger(AbstractOperatorContextFilter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractOperatorContextFilter.class);
+
+    private Set<String> matchesCache = new ConcurrentSkipListSet<>();
 
     protected Excludor excludor;
     protected PathMatcher pathMatcher;
@@ -37,7 +41,7 @@ public abstract class AbstractOperatorContextFilter implements Filter {
             excludor = new Excludor();
         }
 
-        log.info("{} inited, excludes [{}]", this.getClass().getSimpleName(), excludor.toString());
+        LOGGER.info(">>>> {} inited, excludes [{}]", this.getClass().getSimpleName(), excludor.toString());
     }
 
 
@@ -48,7 +52,17 @@ public abstract class AbstractOperatorContextFilter implements Filter {
         String requestPath = urlPathHelper.getPathWithinApplication(request);
         //String requestPath = urlPathHelper.getPathWithinServletMapping(request);
 
-        if (!PathUtils.matches(requestPath, excludor.getExcludes())) {
+        boolean isNeedAuth = false;
+        if(matchesCache.contains(requestPath)) {
+            isNeedAuth = true;
+        }else{
+            if(!PathUtils.matches(requestPath, excludor.getExcludes())){
+                isNeedAuth = true;
+                matchesCache.add(requestPath);
+            }
+        }
+
+        if (isNeedAuth) {
             process(request);
         }
 
