@@ -1,10 +1,10 @@
 package org.evanframework.utils;
 
-import java.util.Set;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.PathMatcher;
+
+import java.util.Set;
 
 /**
  * 路径工具类
@@ -25,14 +25,14 @@ public class PathUtils {
 	 * 路径匹配
 	 * 
 	 * @param lookupPath
-	 * @param excludes
+	 * @param patterns
 	 *  <p>
 	 *         author: ShenWei<br>
 	 *         create at 2015年5月19日 下午12:23:59
 	 */
-	public static boolean matches(String lookupPath, Set<String> excludes) {
-		if (excludes != null) {
-			for (String pattern : excludes) {
+	public static boolean matches(String lookupPath, Set<String> patterns) {
+		if (patterns != null) {
+			for (String pattern : patterns) {
 				if (pathMatcher.match(pattern, lookupPath)) {
 					return true;
 				}
