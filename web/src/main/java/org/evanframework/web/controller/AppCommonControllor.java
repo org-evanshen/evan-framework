@@ -22,8 +22,10 @@ import java.util.Date;
  *
  * @author shen.wei
  * @version 2011-3-23 下午04:27:01
+ * @deprecated 2.1
  */
 @Controller
+@Deprecated
 public class AppCommonControllor {
 
     @Autowired
@@ -38,7 +40,7 @@ public class AppCommonControllor {
                                      @RequestParam(value = "validateCodeKey", required = false, defaultValue = "") String validateCodeKey)
             throws IOException {
         validateCodeKey = validateCodeKey + request.getSession().getId();// 应用端可以传入前缀，支持一个页面需要多个验证码
-        String code = validateCodeUtil.create(validateCodeKey, 4);
+        String code = validateCodeUtil.create(4, validateCodeKey);
 
         ValidateCodeImageRender.render(response, code, height);
     }

@@ -1,24 +1,25 @@
 package org.evanframework.web.utils;
 
-import java.io.UnsupportedEncodingException;
-import java.math.BigDecimal;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
+import org.apache.commons.lang3.StringUtils;
+import org.evanframework.utils.JsonUtils;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang3.StringUtils;
-
-import org.evanframework.utils.JsonUtils;
+import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 
 /**
  * cookie工具
  * 
  * @author shen.wei
  * @version Date: 2010-10-14 下午01:01:39
+ * @since 1.0
+ * @deprecated 2.1
  */
+@Deprecated
 public class CookieUtil {
 	/**
 	 * cookie名称的前缀
