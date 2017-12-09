@@ -19,6 +19,7 @@ public class SysConfigImpl implements SysConfig {
     private final static String DEFAULT_WEB_ENCODING = "UTF-8";
     //private final static String KEY_IS_WRITE_TO_OSS = "isWriteToOss";
     private final static String KEY_PROFILE = "profile";
+    @Deprecated
     private final static String KEY_PROFILE2 = "spring.profiles.active";
     private final static String KEY_APP_CODE1 = "spring.application.name";
     private final static String KEY_APP_CODE2 = "app.code";
@@ -35,21 +36,22 @@ public class SysConfigImpl implements SysConfig {
             throw new IllegalStateException("Environment is not inited, please call method [setEnvironment]");
         }
 
-        String profile = environment.getProperty(KEY_PROFILE2);
-        LOGGER.info(">>>>>>>> Environment [{}] is [{}]", KEY_PROFILE2, profile);
-        if (StringUtils.isBlank(profile)) {
-            profile = environment.getProperty(KEY_PROFILE);
-            LOGGER.info("Environment [{}] is [{}]", KEY_PROFILE, profile);
-        }
+        String profile = environment.getProperty(KEY_PROFILE);
+        LOGGER.info(">>>> Environment [{}] is [{}]", KEY_PROFILE, profile);
+//        if (!StringUtils.isBlank(profile)) {
+//            //profile = environment.getProperty(KEY_PROFILE);
+//            LOGGER.info("Environment [{}] is [{}]", KEY_PROFILE, profile);
+//        }
         if (StringUtils.isBlank(profile)) {
             profile = environment.getProperty("app." + KEY_PROFILE);
-            LOGGER.info("Environment [{}] is [{}]", "app." + KEY_PROFILE, profile);
+            LOGGER.info(">>>> Environment [{}] is [{}]", "app." + KEY_PROFILE, profile);
         }
         if (StringUtils.isNotBlank(profile)) {
             try {
                 this.profile = Profile.valueOf(profile.toUpperCase());
             } catch (Exception ex) {
-                LOGGER.error(">>>>>>>> String [" + profile + "] can't convert to enum [" + Profile.class + "]", ex);
+                //LOGGER.info(">>>> String [" + profile + "] can't convert to enum [" + Profile.class + "]");
+                LOGGER.warn("String [" + profile + "] can't convert to enum [" + Profile.class + "]", ex);
             }
         }
 //		String tmp = environment.getProperty(SysConfigImpl.KEY_IS_WRITE_TO_OSS);
