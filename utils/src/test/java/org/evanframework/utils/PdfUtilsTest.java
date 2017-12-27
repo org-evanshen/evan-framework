@@ -2,7 +2,6 @@ package org.evanframework.utils;
 
 import org.junit.Test;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -48,19 +47,33 @@ public class PdfUtilsTest {
     }
 
     @Test
-    public void testTemplateToPdf() {
+    public void testTemplateToPdf() throws PdfConvertException {
+        long begin = new Date().getTime();
 
-        File dir = new File("d:/111");
-        if (dir.exists()) {
-            dir.delete();
+        Map<String, Object> map = new HashMap<String, Object>();
 
-        }
-        dir.mkdir();
+        map.put("date",new Date());
+        map.put("number",0.00001);
 
-        for (int i = 0; i < 1; i++) {
-            // executor.execute(new Thread1(i));
-            new Thread1(i).run();
-        }
+        String font = "/System/Library/Fonts/STHeiti Light.ttc";
+
+        PdfUtils.templateToPdf(font, "/Users/evan/Downloads/" + begin + ".pdf", map, "pdfTemplate.vm");
+
+        long end = new Date().getTime();
+
+        System.out.println(end - begin);
+
+//        File dir = new File("d:/111");
+//        if (dir.exists()) {
+//            dir.delete();
+//
+//        }
+//        dir.mkdir();
+//
+//        for (int i = 0; i < 1; i++) {
+//            // executor.execute(new Thread1(i));
+//            new Thread1(i).run();
+//        }
 
     }
 
@@ -98,8 +111,8 @@ public class PdfUtilsTest {
             map.put("webresourcesUrl", "http://127.0.0.1:9001/store/aosp");
             long begin = new Date().getTime();
             try {
-                PdfUtils.templateToPdf("","d:/111/" + begin + "_" + no + ".pdf", map, "show.vm",
-                        "D:/");
+                PdfUtils.templateToPdf("", begin + "_" + no + ".pdf", map, "pdfTemplate.vm",
+                        "/Users/evan/Downloads/");
             } catch (PdfConvertException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();

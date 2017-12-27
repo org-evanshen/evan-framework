@@ -36,16 +36,17 @@ import java.util.Map;
  * @since 1.0.6
  */
 public class PdfUtils {
-    private static final Logger logger = LoggerFactory.getLogger(PdfUtils.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PdfUtils.class);
     // private static final int BSIZE = 1024;
     private static final String ENCODE = "UTF-8";
 
     /**
      * 根据velocity模板生成pdf
      *
-     * @param outputFile
-     * @param map
-     * @param template
+     * @param fontPath   字体路径
+     * @param outputFile 输出文件
+     * @param map        数据
+     * @param template   模板路径，以classpath为根目录
      * @throws PdfConvertException <p/>
      *                             author: ShenWei<br>
      *                             create at 2015年6月17日 下午4:45:38
@@ -59,10 +60,11 @@ public class PdfUtils {
     /**
      * 根据velocity模板生成pdf
      *
-     * @param outputFile
-     * @param map
-     * @param template
-     * @param baseDir
+     * @param fontPath   字体路径
+     * @param outputFile 输出文件
+     * @param map        数据
+     * @param template   模板路径，以baseDir为根目录
+     * @param baseDir    模板存放在服务器上的跟目录
      * @throws PdfConvertException <p/>
      *                             author: ShenWei<br>
      *                             create at 2015年6月17日 下午4:46:06
@@ -73,53 +75,24 @@ public class PdfUtils {
         createPdf(fontPath, content, outputFile);
     }
 
-//    /**
-//     * @param inputHtmlFile
-//     * @param outputPdfFile
-//     * @throws PdfConvertException <p/>
-//     *                             author: ShenWei<br>
-//     *                             create at 2015年6月27日 下午2:31:32
-//     */
-//
-//    public static void htmlToPdf(String fontPath, String inputHtmlFile, String outputPdfFile) throws PdfConvertException {
-//        String content;
-//        try {
-//            content = FileUtils.readFileToString(new File(inputHtmlFile));
-//        } catch (IOException e) {
-//            throw new PdfConvertException(
-//                    "Create pdf fail, output [" + inputHtmlFile + "] is invalid," + e.getMessage(), e);
-//        }
-//
-//        FileOutputStream os = getFileOutputStream(outputPdfFile);
-//
-//        try {
-//            doCreatePdf(fontPath, content, os);
-//        } finally {
-//            if (os != null) {
-//                try {
-//                    os.flush();
-//                    os.close();
-//                } catch (IOException e) {
-//                    logger.error(e.getMessage(), e);
-//                }
-//            }
-//        }
-//    }
-
     /**
-     * @param content
-     * @param outputFile
+     * 创建pdf
+     *
+     * @param fontPath   字体路径
+     * @param content    内容
+     * @param outputFile 输出文件
      * @throws PdfConvertException
      */
     public static void createPdf(String fontPath, String content, String outputFile) throws PdfConvertException {
-        FileOutputStream os = getFileOutputStream(outputFile);
+        FileOutputStream os;
 
-        if (os == null) {
-            throw new PdfConvertException("Create pdf fail, output is [" + outputFile + "] is invalid");
+        try {
+            os = new FileOutputStream(outputFile);
+        } catch (FileNotFoundException e) {
+            throw new PdfConvertException("Create pdf fail, output is [" + outputFile + "] is invalid," + e.getMessage(), e);
         }
 
-        logger.info("Create pdf, pdf file is [{}] ", outputFile);
-        // Document document = new Document();
+        LOGGER.info("Create pdf, pdf file is [{}] ", outputFile);
 
         int count = 0;
         PdfConvertException pdfConvertException = null;
@@ -134,59 +107,25 @@ public class PdfUtils {
                 count++;
             }
         } finally {
-            // document.close();
             if (os != null) {
                 try {
                     os.flush();
                     os.close();
                 } catch (IOException e) {
-                    logger.error(e.getMessage(), e);
+                    LOGGER.error(e.getMessage(), e);
                 }
             }
         }
 
         if (pdfConvertException != null) {
-            throw new PdfConvertException(
-                    "Create pdf fail, output is [" + outputFile + "] is not exists," + pdfConvertException.getMessage(),
-                    pdfConvertException);
+            throw pdfConvertException;
         }
-    }
-
-    private static FileOutputStream getFileOutputStream(String outputFile) throws PdfConvertException {
-        FileUtils.mkdirs(outputFile);
-
-        FileOutputStream os = null;
-        int count = 0;
-        FileNotFoundException fileNotFoundException = null;
-        while (count < 5) {// 失败重试5次
-            try {
-                os = new FileOutputStream(outputFile);
-                break;
-            } catch (FileNotFoundException e) {
-                fileNotFoundException = e;
-            }
-            count++;
-        }
-
-        if (fileNotFoundException != null) {
-            throw new PdfConvertException(
-                    "Create pdf fail, output is [" + outputFile + "] is invalid," + fileNotFoundException.getMessage(),
-                    fileNotFoundException);
-        }
-
-        return os;
     }
 
     private static void doCreatePdf(String fontPath, String content, FileOutputStream os) throws PdfConvertException {
         try {
             ITextRenderer renderer = new ITextRenderer();
             renderer.setDocumentFromString(content);
-
-            // DocumentBuilder builder =
-            // DocumentBuilderFactory.newInstance().newDocumentBuilder();
-            // org.w3c.dom.Document doc = builder.parse(new
-            // ByteArrayInputStream(content.getBytes()));//
-            // renderer.setDocument(doc, null);
 
             ITextFontResolver fontResolver = renderer.getFontResolver();
             fontResolver.addFont(fontPath, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
@@ -247,7 +186,7 @@ public class PdfUtils {
 
         PdfStamper stamper = null;
         try {
-            logger.info("Add water sign to pdf, pdf file is [{}], water sign image is [{}],output file is [{}]",
+            LOGGER.info("Add water sign to pdf, pdf file is [{}], water sign image is [{}],output file is [{}]",
                     inputFile, imageFile, outputFile);
             stamper = new PdfStamper(reader, new FileOutputStream(outputFile));
             int pages = reader.getNumberOfPages();// 页数
@@ -269,9 +208,9 @@ public class PdfUtils {
                 try {
                     stamper.close();
                 } catch (DocumentException e) {
-                    logger.error(e.getMessage(), e);
+                    LOGGER.error(e.getMessage(), e);
                 } catch (IOException e) {
-                    logger.error(e.getMessage(), e);
+                    LOGGER.error(e.getMessage(), e);
                 }
             }
 
@@ -343,7 +282,7 @@ public class PdfUtils {
 
         PdfStamper stamper = null;
         try {
-            logger.info("Add water sign to pdf, pdf file is [{}], output file is [{}]", inputFile, outputFile);
+            LOGGER.info("Add water sign to pdf, pdf file is [{}], output file is [{}]", inputFile, outputFile);
             PdfReader.unethicalreading = true;
             stamper = new PdfStamper(reader, new FileOutputStream(outputFile));
             int pages = reader.getNumberOfPages();// 页数
@@ -369,9 +308,9 @@ public class PdfUtils {
                 try {
                     stamper.close();
                 } catch (DocumentException e) {
-                    logger.error(e.getMessage(), e);
+                    LOGGER.error(e.getMessage(), e);
                 } catch (IOException e) {
-                    logger.error(e.getMessage(), e);
+                    LOGGER.error(e.getMessage(), e);
                 }
             }
             if (null != reader) {
@@ -395,7 +334,7 @@ public class PdfUtils {
             copy = new PdfCopy(document, new FileOutputStream(target));
             document.open();
             int n;
-            logger.info("Concat pdfs, pdf files is {}, output file is [{}]", sources, target);
+            LOGGER.info("Concat pdfs, pdf files is {}, output file is [{}]", sources, target);
             if (null != sources && sources.length > 0) {
                 for (int i = 0; i < sources.length; i++) {
                     reader = new PdfReader(sources[i]);
@@ -434,7 +373,7 @@ public class PdfUtils {
      */
     public static void pdfMerge(String target, String... sources) throws PdfConvertException {
         if (null == sources || sources.length <= 0) {
-            logger.info(String.format("while pdf merge but source  is  empty "));
+            LOGGER.info(String.format("while pdf merge but source  is  empty "));
             return;
         }
         Document document = new Document();
@@ -482,107 +421,31 @@ public class PdfUtils {
         }
     }
 
-    public static void main(String[] args) throws PdfConvertException {
-        pdfMerge("f:\\1234.pdf", new String[]{"F:\\精益创业（美） 埃里克·莱斯 .pdf", "F:\\Documents\\产品文档\\无忧保全\\无忧保全产品介绍V1.pdf"});
-    }
 
-    // public static void startService(){
-    // DefaultOfficeManagerConfiguration cofiguration=new
-    // DefaultOfficeManagerConfiguration();
-    // String home=getSysConfig().get(SysConfig.KEY_OPEN_OFFICE_HOME);
-    // cofiguration.setOfficeHome(home);//
-    // String port =getSysConfig().get(SysConfig.KEY_OPEN_OFFICE_PORT);
-    // //String port ="8100";
-    // cofiguration.setPortNumber(Integer.parseInt(port));//
-    // cofiguration.setTaskExecutionTimeout(60*5*1000L);//设置任务执行超时为5分钟
-    // cofiguration.setTaskQueueTimeout(1000 * 60 * 60 * 24L);//设置任务队列超时为24小时
-    //
-    // officeManager=cofiguration.buildOfficeManager();
-    // logger.info(String.format("openoffice.home is %s openoffice.port is %s",
-    // home,port));
-    // officeManager.start();
-    // }
-
-//	/**
-//	 * @param sourcePdf
-//	 *            pdf路径
-//	 * @param targetSwf
-//	 *            swf输出路径
-//	 * @throws PdfConvertException
-//	 */
-//	public static void pdfToSwf(String sourcePdf, String targetSwf) throws PdfConvertException {
-//		if (StringUtils.isBlank(targetSwf)) {
-//			logger.error("swf的输出路径不能为空");
-//			throw new PdfConvertException("swf的输出路径不能为空");
-//		}
-//
-//		File file = new File(sourcePdf);
-//		if (!file.exists()) {
-//			logger.error("要生产swf的pdf文件不存在:" + sourcePdf);
-//			throw new PdfConvertException("要生产swf的pdf文件不存在:" + sourcePdf);
-//		}
-//
-//		String outputDir = targetSwf.substring(0, targetSwf.lastIndexOf("/"));
-//		File output = new File(outputDir);
-//		if (!output.exists()) {
-//			output.mkdirs();
-//		}
-//
-//		// String command = commanddir + " -t " + pdfpath + " -o " +
-//		// swfoutputdir + " -s flashversion=9"
-//		// + " -s languageDir=" + languagedir;
-//		String command = String.format("%s -t %s -o %s -s flashversion=9 -s languageDir=%s", commanddir, sourcePdf,
-//				targetSwf, languagedir);
-//
-//		logger.info("Begin pdf to swf, command is [{}]", command);
-//
-//		Runtime rt = Runtime.getRuntime();
-//		int count = 0;
-//		int result = -1;
-//		PdfConvertException pdfConvertException = null;
-//		while (count < 5) {// 失败重试5次
-//			try {
-//				result = pdfToSwfInner(rt, command);
-//				if (result == 0) {// 成功
-//					break;
-//				}
-//			} catch (PdfConvertException ex) {
-//				pdfConvertException = ex;
-//			}
-//			count++;
-//		}
-//		if (result != 0) {
-//			throw new PdfConvertException("Pdf to swf wrong,result:[" + result + "]," + command);
-//		} else if (pdfConvertException != null) {
-//			throw new PdfConvertException("Pdf to swf wrong," + pdfConvertException.getMessage() + command,
-//					pdfConvertException);
-//		}
-//	}
-
-    private static int pdfToSwfInner(Runtime rt, String command) throws PdfConvertException {
-        Process process = null;
-        try {
-            process = rt.exec(command);
-            BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            while (br.readLine() != null) {
-                ;//
-            }
-            BufferedReader br2 = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-            while (br2.readLine() != null) {
-                ;//
-            }
-            process.waitFor();
-            return process.exitValue();
-        } catch (IOException ex) {
-            throw new PdfConvertException(ex.getMessage(), ex);
-        } catch (InterruptedException ex) {
-            throw new PdfConvertException(ex.getMessage(), ex);
-        } finally {
-            if (null != process) {
-                process.destroy();
-            }
-        }
-    }
+//    private static int pdfToSwfInner(Runtime rt, String command) throws PdfConvertException {
+//        Process process = null;
+//        try {
+//            process = rt.exec(command);
+//            BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));
+//            while (br.readLine() != null) {
+//                ;//
+//            }
+//            BufferedReader br2 = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+//            while (br2.readLine() != null) {
+//                ;//
+//            }
+//            process.waitFor();
+//            return process.exitValue();
+//        } catch (IOException ex) {
+//            throw new PdfConvertException(ex.getMessage(), ex);
+//        } catch (InterruptedException ex) {
+//            throw new PdfConvertException(ex.getMessage(), ex);
+//        } finally {
+//            if (null != process) {
+//                process.destroy();
+//            }
+//        }
+//    }
 
     public static int getPdfPages(String file) throws IOException {
         int pdfPages;
@@ -592,6 +455,12 @@ public class PdfUtils {
         return pdfPages;
     }
 
+    /***
+     * pdf 转图片
+     * @param pdfPath
+     * @return
+     * @throws PdfConvertException
+     */
     public static List<String> pdfToImage(String pdfPath) throws PdfConvertException {
         // 路径前缀
         String prefixPath = pdfPath.substring(0, pdfPath.lastIndexOf("/") + 1);
@@ -603,7 +472,7 @@ public class PdfUtils {
         try {
             document.setFile(pdfPath);
         } catch (Exception ex) {
-            logger.error("pdf convert image error:", ex.getMessage());
+            LOGGER.error("pdf convert image error:", ex.getMessage());
             throw new PdfConvertException("Pdf to image error,pdf [" + pdfPath + "] " + ex.getMessage(), ex);
         }
         float rotation = 0f;
@@ -615,7 +484,7 @@ public class PdfUtils {
                 image = (BufferedImage) document.getPageImage(i - 1, GraphicsRenderingHints.SCREEN,
                         Page.BOUNDARY_CROPBOX, rotation, 1.5f);
             } catch (InterruptedException ex) {
-                logger.error("pdf convert image error:", ex.getMessage());
+                LOGGER.error("pdf convert image error:", ex.getMessage());
             }
             sb.setLength(0);
             sb.append(prefixPath).append(pdfName).append("_").append(i).append(".png");// 每页生成的图片路径
@@ -625,7 +494,7 @@ public class PdfUtils {
                 File file = new File(sb.toString());
                 ImageIO.write(rendImage, "PNG", file);
             } catch (IOException e) {
-                logger.error("pdf convert image error:", e.getMessage());
+                LOGGER.error("pdf convert image error:", e.getMessage());
                 throw new PdfConvertException("Pdf to image error,pdf [" + pdfPath + "] " + e.getMessage(), e);
             } finally {
                 document.dispose();
@@ -635,6 +504,13 @@ public class PdfUtils {
         return imgPathList;
     }
 
+    /**
+     * pdf 转图片
+     * @param pdfStream
+     * @param pdfPath
+     * @return
+     * @throws PdfConvertException
+     */
     public static List<String> pdfToImage(InputStream pdfStream, String pdfPath) throws PdfConvertException {
         return pdfToImage(pdfStream, pdfPath, null);
     }
@@ -744,4 +620,135 @@ public class PdfUtils {
         data = null;
         return outStream.toByteArray();
     }
+
+    //    /**
+//     * @param inputHtmlFile
+//     * @param outputPdfFile
+//     * @throws PdfConvertException <p/>
+//     *                             author: ShenWei<br>
+//     *                             create at 2015年6月27日 下午2:31:32
+//     */
+//
+//    public static void htmlToPdf(String fontPath, String inputHtmlFile, String outputPdfFile) throws PdfConvertException {
+//        String content;
+//        try {
+//            content = FileUtils.readFileToString(new File(inputHtmlFile));
+//        } catch (IOException e) {
+//            throw new PdfConvertException(
+//                    "Create pdf fail, output [" + inputHtmlFile + "] is invalid," + e.getMessage(), e);
+//        }
+//
+//        FileOutputStream os = getFileOutputStream(outputPdfFile);
+//
+//        try {
+//            doCreatePdf(fontPath, content, os);
+//        } finally {
+//            if (os != null) {
+//                try {
+//                    os.flush();
+//                    os.close();
+//                } catch (IOException e) {
+//                    LOGGER.error(e.getMessage(), e);
+//                }
+//            }
+//        }
+//    }
+
+    // public static void startService(){
+    // DefaultOfficeManagerConfiguration cofiguration=new
+    // DefaultOfficeManagerConfiguration();
+    // String home=getSysConfig().get(SysConfig.KEY_OPEN_OFFICE_HOME);
+    // cofiguration.setOfficeHome(home);//
+    // String port =getSysConfig().get(SysConfig.KEY_OPEN_OFFICE_PORT);
+    // //String port ="8100";
+    // cofiguration.setPortNumber(Integer.parseInt(port));//
+    // cofiguration.setTaskExecutionTimeout(60*5*1000L);//设置任务执行超时为5分钟
+    // cofiguration.setTaskQueueTimeout(1000 * 60 * 60 * 24L);//设置任务队列超时为24小时
+    //
+    // officeManager=cofiguration.buildOfficeManager();
+    // LOGGER.info(String.format("openoffice.home is %s openoffice.port is %s",
+    // home,port));
+    // officeManager.start();
+    // }
+
+//	/**
+//	 * @param sourcePdf
+//	 *            pdf路径
+//	 * @param targetSwf
+//	 *            swf输出路径
+//	 * @throws PdfConvertException
+//	 */
+//	public static void pdfToSwf(String sourcePdf, String targetSwf) throws PdfConvertException {
+//		if (StringUtils.isBlank(targetSwf)) {
+//			LOGGER.error("swf的输出路径不能为空");
+//			throw new PdfConvertException("swf的输出路径不能为空");
+//		}
+//
+//		File file = new File(sourcePdf);
+//		if (!file.exists()) {
+//			LOGGER.error("要生产swf的pdf文件不存在:" + sourcePdf);
+//			throw new PdfConvertException("要生产swf的pdf文件不存在:" + sourcePdf);
+//		}
+//
+//		String outputDir = targetSwf.substring(0, targetSwf.lastIndexOf("/"));
+//		File output = new File(outputDir);
+//		if (!output.exists()) {
+//			output.mkdirs();
+//		}
+//
+//		// String command = commanddir + " -t " + pdfpath + " -o " +
+//		// swfoutputdir + " -s flashversion=9"
+//		// + " -s languageDir=" + languagedir;
+//		String command = String.format("%s -t %s -o %s -s flashversion=9 -s languageDir=%s", commanddir, sourcePdf,
+//				targetSwf, languagedir);
+//
+//		LOGGER.info("Begin pdf to swf, command is [{}]", command);
+//
+//		Runtime rt = Runtime.getRuntime();
+//		int count = 0;
+//		int result = -1;
+//		PdfConvertException pdfConvertException = null;
+//		while (count < 5) {// 失败重试5次
+//			try {
+//				result = pdfToSwfInner(rt, command);
+//				if (result == 0) {// 成功
+//					break;
+//				}
+//			} catch (PdfConvertException ex) {
+//				pdfConvertException = ex;
+//			}
+//			count++;
+//		}
+//		if (result != 0) {
+//			throw new PdfConvertException("Pdf to swf wrong,result:[" + result + "]," + command);
+//		} else if (pdfConvertException != null) {
+//			throw new PdfConvertException("Pdf to swf wrong," + pdfConvertException.getMessage() + command,
+//					pdfConvertException);
+//		}
+//	}
+
+    //    private static FileOutputStream getFileOutputStream(String outputFile) throws PdfConvertException {
+//        FileUtils.mkdirs(outputFile);
+//
+//        FileOutputStream os = null;
+//        int count = 0;
+//        FileNotFoundException fileNotFoundException = null;
+//        while (count < 5) {// 失败重试5次
+//            try {
+//                os = new FileOutputStream(outputFile);
+//                break;
+//            } catch (FileNotFoundException e) {
+//                fileNotFoundException = e;
+//            }
+//            count++;
+//        }
+//
+//        if (fileNotFoundException != null) {
+//            throw new PdfConvertException(
+//                    "Create pdf fail, output is [" + outputFile + "] is invalid," + fileNotFoundException.getMessage(),
+//                    fileNotFoundException);
+//        }
+//
+//        return os;
+//    }
 }

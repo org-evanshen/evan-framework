@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style mce_bogus="1" type="text/css">
+        body{font-family: "Heiti SC Light";}
+    </style>
+</head>
+<body>
+    日期: $!date
+    <br/>数字: $!number
+    <br/>HTML代码: $!html
+</body>
+</html>
