@@ -90,7 +90,7 @@ public class RedisUtil {
             String fullObjectTypeKey = getFullObjectTypeKey(objectTypeKey);
             Object o = null;
             try {
-                o = hashOperations.get(getFullObjectTypeKey(objectTypeKey), String.valueOf(objectKey));
+                o = hashOperations.get(fullObjectTypeKey, String.valueOf(objectKey));
             } catch (RuntimeException ex) {
                 LOGGER.error("Get redis error,fullObjectTypeKey is [" + fullObjectTypeKey + "],objectKey is [" + objectKey
                         + "]," + ex.getMessage(), ex);
@@ -118,6 +118,10 @@ public class RedisUtil {
             String fullObjectTypeKey = getFullObjectTypeKey(objectTypeKey);
             try {
                 hashOperations.delete(fullObjectTypeKey, String.valueOf(objectKey));
+                if (LOGGER.isDebugEnabled()) {
+                    LOGGER.debug("Delete redis,fullObjectTypeKey is [{}],objectKey is [{}]", objectTypeKey, objectKey);
+                }
+
             } catch (RuntimeException ex) {
                 LOGGER.error("Delete redis error,fullObjectTypeKey is [" + fullObjectTypeKey + "],objectKey is ["
                         + objectKey + "]," + ex.getMessage(), ex);
