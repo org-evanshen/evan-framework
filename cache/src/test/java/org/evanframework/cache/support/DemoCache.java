@@ -18,7 +18,8 @@ public class DemoCache extends AbstractCache<Demo> {
 
     @PostConstruct
     public void init() {
-        super.init(CACHE_NAME, redisTemplateCreator, 1, cacheManager);
+        super.setRedisExpireSeconds(5);
+        super.init(CACHE_NAME, redisTemplateCreator, 1);
     }
 
     @Autowired

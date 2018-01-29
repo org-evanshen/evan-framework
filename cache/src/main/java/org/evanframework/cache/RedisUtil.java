@@ -1,12 +1,13 @@
 package org.evanframework.cache;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.io.Serializable;
-import java.util.concurrent.TimeUnit;
+import java.util.Date;
 
 /**
  * Redis工具类
@@ -67,10 +68,19 @@ public class RedisUtil {
             }
             String fullObjectTypeKey = getFullObjectTypeKey(objectTypeKey);
             try {
-                if (expireSeconds != null) {
-                    redisTemplate.expire(fullObjectTypeKey, expireSeconds, TimeUnit.SECONDS);
-                }
                 hashOperations.put(fullObjectTypeKey, String.valueOf(objectKey), o);
+                if (expireSeconds != null) {
+                    //redisTemplate.expire(fullObjectTypeKey, expireSeconds, TimeUnit.SECONDS);
+                    Date now = new Date();
+                    Date expireAt = DateUtils.addSeconds(now, expireSeconds);
+
+                    redisTemplate.expireAt(fullObjectTypeKey, expireAt);
+
+                    if (LOGGER.isDebugEnabled()) {
+                        LOGGER.debug(now + "");
+                        LOGGER.debug(redisTemplate.getExpire(fullObjectTypeKey) + "");
+                    }
+                }
             } catch (RuntimeException ex) {
                 LOGGER.error("Put redis error,fullObjectTypeKey is [" + fullObjectTypeKey + "],objectKey is [" + objectKey
                         + "]," + ex.getMessage(), ex);
@@ -98,10 +108,10 @@ public class RedisUtil {
 
             if (o != null) {
                 returnO = (T) o;
-                if (LOGGER.isDebugEnabled()) {
-                    LOGGER.debug(String.format("Get Put redis objectTypeKey is	[%s],objectKey is [%s],value is [%s]",
-                            objectTypeKey, objectKey, returnO));
-                }
+//                if (LOGGER.isDebugEnabled()) {
+//                    LOGGER.debug(String.format("Get Put redis objectTypeKey is	[%s],objectKey is [%s],value is [%s]",
+//                            objectTypeKey, objectKey, returnO));
+//                }
             } else {
                 if (LOGGER.isDebugEnabled()) {
                     LOGGER.debug(String.format("Not find redis objectTypeKey is [%s],objectKey is [%s]", objectTypeKey,

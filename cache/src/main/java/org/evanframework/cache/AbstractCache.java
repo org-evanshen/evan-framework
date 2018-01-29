@@ -36,11 +36,16 @@ import java.lang.reflect.Type;
 public abstract class AbstractCache<T> {
     private static final Logger logger = LoggerFactory.getLogger(AbstractCache.class);
 
-    private static final int DEFAULT_REDIS_TIME_TO_LIVE_SECONDS = 7200;//默认失效时间
-    private int redisTimeToLiveSeconds = DEFAULT_REDIS_TIME_TO_LIVE_SECONDS;
+    private int redisExpireSeconds = 7200;
     private Class<T> cacheClass;
 
     private CacheUtil cacheUtil;
+
+    @SuppressWarnings("unchecked")
+    public AbstractCache() {
+        Type[] types = ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments();
+        cacheClass = (Class<T>) types[0];
+    }
 
     protected void init(String cacheName, RedisTemplateCreator redisTemplateCreator, int redisDatabaseIndex, CacheManager ehCacheManager) {
         //如果要同时缓存到ehcache,这初始化EHCacheUtil
@@ -60,25 +65,19 @@ public abstract class AbstractCache<T> {
         initLog(cacheName, redisDatabaseIndex);
     }
 
-    private void initLog(String cacheName, int redisDatabaseIndex) {
-        if(logger.isDebugEnabled()) {
-            logger.debug("Cache [cacheName:{},cacheClass:{},redisDatabaseIndex:{}] inited", cacheName, cacheClass.getName(), redisDatabaseIndex);
-        }
-    }
-
 //    /**
 //     * 设置cacheUtil，由子类来实现
 //     */
 //    protected abstract CacheUtil getCacheUtil();
 
-    @SuppressWarnings("unchecked")
-    public AbstractCache() {
-        Type[] types = ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments();
-        cacheClass = (Class<T>) types[0];
+    private void initLog(String cacheName, int redisDatabaseIndex) {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Cache [cacheName:{},cacheClass:{},redisDatabaseIndex:{}] inited", cacheName, cacheClass.getName(), redisDatabaseIndex);
+        }
     }
 
     public void put(Serializable key, T o) {
-        cacheUtil.put(key, (Serializable) o, redisTimeToLiveSeconds);
+        cacheUtil.put(key, (Serializable) o, redisExpireSeconds);
     }
 
     public T get(Serializable key) {
@@ -97,9 +96,9 @@ public abstract class AbstractCache<T> {
     /**
      * 设置 redis 的失效时间，单位秒，默认7200
      *
-     * @param redisTimeToLiveSeconds
+     * @param redisExpireSeconds
      */
-    protected void setRedisTimeToLiveSeconds(int redisTimeToLiveSeconds) {
-        this.redisTimeToLiveSeconds = redisTimeToLiveSeconds;
+    protected void setRedisExpireSeconds(int redisExpireSeconds) {
+        this.redisExpireSeconds = redisExpireSeconds;
     }
 }
