@@ -35,6 +35,7 @@ public class MailSimpleSender extends AbstractMailSender {
     private String mailFrom;
     private String mailFromName;
     private String smtpServer;
+    private String smtpPort;
     private String password;
 
     public MailSimpleSender() {
@@ -46,10 +47,11 @@ public class MailSimpleSender extends AbstractMailSender {
      * @param smtpServer   发件服务器
      * @param password     密码
      */
-    public MailSimpleSender(String mailFrom, String mailFromName, String smtpServer, String password) {
+    public MailSimpleSender(String mailFrom, String mailFromName, String smtpServer, String smtpPort,  String password) {
         this.mailFrom = mailFrom;
         this.mailFromName = mailFromName;
         this.smtpServer = smtpServer;
+        this.smtpPort = smtpPort;
         this.password = password;
 
         init();
@@ -81,8 +83,11 @@ public class MailSimpleSender extends AbstractMailSender {
                 : this.password;
         String smtpServer = StringUtils.isNotBlank(mail.getSmtpServer()) ? mail.getSmtpServer()
                 : this.smtpServer;
+        String smtpPort = StringUtils.isNotBlank(mail.getSmtpPort()) ? mail.getSmtpPort()
+                : this.smtpPort;
         String fromName = StringUtils.isNotBlank(mail.getFromName()) ? mail.getFromName()
                 : this.mailFromName;
+
         String fromNick = null;
         try {
             fromNick = MimeUtility.encodeText(fromName);
@@ -96,6 +101,7 @@ public class MailSimpleSender extends AbstractMailSender {
         Authenticator auth = new PopupAuthenticator(from, password);
         Properties mailProps = new Properties();
         mailProps.put("mail.smtp.host", smtpServer);
+        mailProps.put("mail.smtp.port", smtpPort);
         mailProps.put("mail.smtp.auth", "true");
         mailProps.put("username", from);
         mailProps.put("password", password);

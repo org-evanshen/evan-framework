@@ -31,6 +31,7 @@ public class MailContext implements Serializable {
     private String user;
     private String password;
     private String smtpServer;
+    private String smtpPort;
     private String fromName;
     private String encoding = DEFAULT_ENCODING;
     private String contentType = DEFAULT_CONTENT_TYPE;
@@ -212,6 +213,14 @@ public class MailContext implements Serializable {
 
     public void setSmtpServer(String smtpServer) {
         this.smtpServer = smtpServer;
+    }
+
+    public String getSmtpPort() {
+        return smtpPort;
+    }
+
+    public void setSmtpPort(String smtpPort) {
+        this.smtpPort = smtpPort;
     }
 
     public String getFromName() {

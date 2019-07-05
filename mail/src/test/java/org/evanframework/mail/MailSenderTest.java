@@ -14,9 +14,9 @@ import java.util.List;
 
 public class MailSenderTest {
 
-    private String from = "evanshen8888@163.com";
-    private String fromName = "沈炜";
-    private String password = "123qweasd";
+    private String from = "mizhi_inc@163.com";
+    private String fromName = "mizhi_inc";
+    private String password = "MiZhi002";
     private String smtpServer = "smtp.163.com";
 
     private MailSender mailSender;
@@ -24,14 +24,14 @@ public class MailSenderTest {
     @Before
     public void init() {
         mailSender = new MailSimpleSender(from, fromName, smtpServer, password);
+        ((MailSimpleSender) mailSender).setAsynchronous(true);
     }
 
     @Test
     public void testSend1() throws MessagingException {
         MailContext mailContext = new MailContext();
 
-        //mailContext.setTo("277469513@qq.com");
-        mailContext.setTo("sun_shen_1977@163.com");
+        mailContext.setTo("mouhaining@toothfish.cn");
         mailContext.setText("测试邮件内容1");
         mailContext.setSubject("测试邮件2");
         mailContext.setFromName(fromName);
