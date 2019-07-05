@@ -647,7 +647,7 @@ public class ImageUtils {
 	}
 
 	/**
-	 * 给PNG图片打水印(针对安存已保全的印章做的)
+	 *
 	 * 
 	 * @param targetImg
 	 *            目标图片路径，如：C://myPictrue//1.jpg

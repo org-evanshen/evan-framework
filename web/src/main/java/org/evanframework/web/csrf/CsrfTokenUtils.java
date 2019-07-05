@@ -1,20 +1,18 @@
 package org.evanframework.web.csrf;
 
-import java.util.Date;
-import java.util.UUID;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.evanframework.cache.RedisUtil;
-import org.evanframework.web.utils.CookieUtil;
-import org.evanframework.web.utils.HttpUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.evanframework.cache.RedisUtil;
+import org.evanframework.utils.DigestsUtils;
+import org.evanframework.web.utils.CookieUtil;
+import org.evanframework.web.utils.HttpUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.evanframework.utils.DigestsUtils;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
+import java.util.UUID;
 
 /**
  * 跨站伪造攻击处理工具
@@ -25,7 +23,7 @@ public class CsrfTokenUtils {
 
     private RedisUtil redisUtil;
     private final static String CSRF_COOKIE_KEY = "csrf_tokens";
-    private static final String OBJECT_TYPE_KEY = "Ancun23dsasdasToken";
+    private static final String OBJECT_TYPE_KEY = "E12123dsasdasToken";
     public static final String CSRF_TOKEN_KEY_PREFIX = "csrf_token_";
     private final static int TIME_OUT = 1800;
     private static Logger logger = LoggerFactory.getLogger(CsrfTokenUtils.class);
