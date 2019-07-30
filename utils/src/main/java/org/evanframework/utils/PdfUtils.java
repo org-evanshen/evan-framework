@@ -6,9 +6,6 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.pdf.*;
-import com.sun.image.codec.jpeg.JPEGCodec;
-import com.sun.image.codec.jpeg.JPEGEncodeParam;
-import com.sun.image.codec.jpeg.JPEGImageEncoder;
 import org.icepdf.core.pobjects.Page;
 import org.icepdf.core.util.GraphicsRenderingHints;
 import org.slf4j.Logger;
@@ -560,25 +557,16 @@ public class PdfUtils {
                 } else {
                     fos = new FileOutputStream(sb.toString());
                 }
-                JPEGEncodeParam jep = JPEGCodec.getDefaultJPEGEncodeParam(image);
-                if (jep != null) {
-                    jep.setQuality(0.92f, true);
-                    JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(fos, jep);
-                    encoder.encode(image);
-                } else {
-                    File jpgFile = null;
-                    if (targetRootDir != null) {
-                        jpgFile = new File(PathUtils.concat(targetRootDir, sb.toString()));
-                    } else {
-                        jpgFile = new File(sb.toString());
-                    }
 
-                    ImageIO.write(rendImage, "PNG", jpgFile);
-                    image.flush();
+                File jpgFile = null;
+                if (targetRootDir != null) {
+                    jpgFile = new File(PathUtils.concat(targetRootDir, sb.toString()));
+                } else {
+                    jpgFile = new File(sb.toString());
                 }
-                if (fos != null) {
-                    fos.close();
-                }
+
+                ImageIO.write(rendImage, "PNG", jpgFile);
+                image.flush();
             }
         } catch (IOException e) {
             throw new PdfConvertException("Pdf to image error,pdf [" + targetImgNamePrefix + "] " + e, e);

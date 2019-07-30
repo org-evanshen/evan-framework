@@ -1,9 +1,5 @@
 package org.evanframework.web.utils;
 
-import com.sun.image.codec.jpeg.JPEGCodec;
-import com.sun.image.codec.jpeg.JPEGEncodeParam;
-import com.sun.image.codec.jpeg.JPEGImageEncoder;
-
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.*;
@@ -98,14 +94,14 @@ public class ValidateCodeImageRender {
 
         gPanel.dispose();
 
-        JPEGEncodeParam jep = JPEGCodec.getDefaultJPEGEncodeParam(image);
-        if (jep != null) {
-            jep.setQuality(0.999f, true);
-            JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(os, jep);
-            encoder.encode(image);
-        } else {
+//        JPEGEncodeParam jep = JPEGCodec.getDefaultJPEGEncodeParam(image);
+//        if (jep != null) {
+//            jep.setQuality(0.999f, true);
+//            JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(os, jep);
+//            encoder.encode(image);
+//        } else {
             ImageIO.write(image, "JPEG", os);
-        }
+//        }
     }
 
     /**

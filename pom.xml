@@ -7,7 +7,7 @@
     <groupId>org.evanframework</groupId>
     <artifactId>evan-framework</artifactId>
     <packaging>pom</packaging>
-    <version>2.1.1-SNAPSHOT</version>
+    <version>2.1.2-SNAPSHOT</version>
 
     <modules>
         <module>domain</module>
@@ -27,6 +27,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jdk.version>1.7</jdk.version>
+        <java.home>C:/Program Files/Java/jdk1.8.0_171</java.home>
         <file_encoding>UTF-8</file_encoding>
         <commons-codec.version>1.10</commons-codec.version>
         <commons-pool.version>1.6</commons-pool.version>
@@ -125,7 +126,7 @@
             <id>nexus-releases</id>
             <name>nexus Repository</name>
             <!--<url>http://192.168.0.109:8081/nexus/content/groups/public/</url>-->
-            <url>http://101.37.151.117:8081/groups/public/</url>
+            <url>http://120.27.218.59:8081/groups/public/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>

@@ -23,8 +23,8 @@ public class MailSenderTest {
 
     @Before
     public void init() {
-        mailSender = new MailSimpleSender(from, fromName, smtpServer, password);
-        ((MailSimpleSender) mailSender).setAsynchronous(true);
+        mailSender = new MailSimpleSender(from, fromName, smtpServer, password, true);
+//        ((MailSimpleSender) mailSender).setAsynchronous(true);
     }
 
     @Test
@@ -33,7 +33,7 @@ public class MailSenderTest {
 
         mailContext.setTo("mouhaining@toothfish.cn");
         mailContext.setText("测试邮件内容1");
-        mailContext.setSubject("测试邮件2");
+        mailContext.setSubject("测试邮件21");
         mailContext.setFromName(fromName);
 
         mailSender.send(mailContext);

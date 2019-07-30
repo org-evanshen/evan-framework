@@ -35,7 +35,7 @@ public class MailSimpleSender extends AbstractMailSender {
     private String mailFrom;
     private String mailFromName;
     private String smtpServer;
-    private String smtpPort;
+    private boolean useSsl;
     private String password;
 
     public MailSimpleSender() {
@@ -47,11 +47,26 @@ public class MailSimpleSender extends AbstractMailSender {
      * @param smtpServer   发件服务器
      * @param password     密码
      */
-    public MailSimpleSender(String mailFrom, String mailFromName, String smtpServer, String smtpPort,  String password) {
+    public MailSimpleSender(String mailFrom, String mailFromName, String smtpServer, String password) {
         this.mailFrom = mailFrom;
         this.mailFromName = mailFromName;
         this.smtpServer = smtpServer;
-        this.smtpPort = smtpPort;
+        this.password = password;
+
+        init();
+    }
+
+    /**
+     * @param mailFrom     发件人邮箱
+     * @param mailFromName 发件人名称
+     * @param smtpServer   发件服务器
+     * @param password     密码
+     */
+    public MailSimpleSender(String mailFrom, String mailFromName, String smtpServer, String password, boolean useSsl) {
+        this.mailFrom = mailFrom;
+        this.mailFromName = mailFromName;
+        this.smtpServer = smtpServer;
+        this.useSsl = useSsl;
         this.password = password;
 
         init();
@@ -83,8 +98,6 @@ public class MailSimpleSender extends AbstractMailSender {
                 : this.password;
         String smtpServer = StringUtils.isNotBlank(mail.getSmtpServer()) ? mail.getSmtpServer()
                 : this.smtpServer;
-        String smtpPort = StringUtils.isNotBlank(mail.getSmtpPort()) ? mail.getSmtpPort()
-                : this.smtpPort;
         String fromName = StringUtils.isNotBlank(mail.getFromName()) ? mail.getFromName()
                 : this.mailFromName;
 
@@ -101,7 +114,10 @@ public class MailSimpleSender extends AbstractMailSender {
         Authenticator auth = new PopupAuthenticator(from, password);
         Properties mailProps = new Properties();
         mailProps.put("mail.smtp.host", smtpServer);
-        mailProps.put("mail.smtp.port", smtpPort);
+        if (useSsl) {
+            mailProps.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");//SSL协议配置
+            mailProps.put("mail.smtp.socketFactory.port", "465");
+        }
         mailProps.put("mail.smtp.auth", "true");
         mailProps.put("username", from);
         mailProps.put("password", password);

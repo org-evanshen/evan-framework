@@ -85,9 +85,9 @@ public class PdfUtilsTest {
 
     @Test
     public void testPdfToImage2() throws FileNotFoundException, PdfConvertException {
-        FileInputStream fis = new FileInputStream("d:/1446284251352.pdf");
+        FileInputStream fis = new FileInputStream("d:/test/钢材贸易合同.pdf");
 
-        List<String> list = PdfUtils.pdfToImage(fis, "1446284251352.pdf", "d:/");
+        List<String> list = PdfUtils.pdfToImage(fis, "1446284251352.pdf", "d:/test/");
         System.out.println(list);
     }
 
