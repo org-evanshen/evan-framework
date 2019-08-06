@@ -1,8 +1,8 @@
 package org.evanframework.web.exception.handler;
 
 import org.apache.commons.lang3.StringUtils;
-import org.evanframework.dto.ApiResponse;
-import org.evanframework.dto.OperateCommonResultType;
+import org.evanframework.model.result.ApiResponse;
+import org.evanframework.model.result.OperateCommonResultType;
 import org.evanframework.exception.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

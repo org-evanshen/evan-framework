@@ -1,8 +1,8 @@
 package org.evanframework.datadict.manager.model;
 
 
-import org.evanframework.query.AbstractQueryParam;
-import org.evanframework.query.QueryParam;
+import org.evanframework.model.query.AbstractQueryParam;
+import org.evanframework.model.query.QueryParam;
 
 import java.io.Serializable;
 import java.math.BigDecimal;

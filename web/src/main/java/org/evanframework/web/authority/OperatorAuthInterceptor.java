@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.evanframework.exception.PermissionDeniedException;
-import org.evanframework.dto.OperatorAgent;
+import org.evanframework.model.result.OperatorAgent;
 import org.evanframework.utils.PathUtils;
 import org.evanframework.web.exception.NoLoginException;
 import org.evanframework.web.support.Excludor;

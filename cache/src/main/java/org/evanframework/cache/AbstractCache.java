@@ -2,6 +2,9 @@ package org.evanframework.cache;
 
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.config.CacheConfiguration;
+import org.evanframework.ehcache.EHCacheUtil;
+import org.evanframework.redis.RedisTemplateCreator;
+import org.evanframework.redis.RedisUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

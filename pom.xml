@@ -7,27 +7,29 @@
     <groupId>org.evanframework</groupId>
     <artifactId>evan-framework</artifactId>
     <packaging>pom</packaging>
-    <version>2.1.2-SNAPSHOT</version>
+    <version>3.0-SNAPSHOT</version>
 
     <modules>
-        <module>domain</module>
+        <module>core</module>
         <module>sysconfig</module>
-        <module>cache</module>
-        <module>datadict</module>
-        <module>store</module>
-        <module>mq</module>
+
+<!--        <module>datadict</module>-->
+<!--        <module>store</module>-->
+        <module>rocketmq</module>
         <module>mail</module>
-        <module>httpclient</module>
-        <module>syslog</module>
-        <module>persistence</module>
-        <module>utils</module>
-        <module>web</module>
+        <module>ehcache</module>
+        <module>redis</module>
+        <module>cache</module>
+<!--        <module>session</module>-->
+<!--        <module>syslog</module>-->
+<!--        <module>jdbc</module>-->
+<!--        <module>utils</module>-->
+<!--        <module>web</module>-->
     </modules>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jdk.version>1.7</jdk.version>
-        <java.home>C:/Program Files/Java/jdk1.8.0_171</java.home>
         <file_encoding>UTF-8</file_encoding>
         <commons-codec.version>1.10</commons-codec.version>
         <commons-pool.version>1.6</commons-pool.version>

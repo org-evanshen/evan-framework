@@ -1,7 +1,7 @@
 package org.evanframework.web.argumentresolver;
 
 
-import org.evanframework.query.QueryParam;
+import org.evanframework.model.query.QueryParam;
 import org.evanframework.web.annotation.QueryPage;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
