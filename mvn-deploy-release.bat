@@ -9,7 +9,7 @@ if not defined version (
 echo Deploy version is %version%
 
 call mvn versions:set -pl ./ -DnewVersion=%version%
-call mvn clean deploy -pl -Dmaven.test.skip=true
+call mvn clean deploy -Dmaven.test.skip=true
 call mvn versions:set -pl ./ -DnewVersion=%version%-SNAPSHOT
 call mvn versions:commit
 
